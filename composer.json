@@ -1,7 +1,7 @@
 {
-    "name": "hipex/deploy-configuration",
+    "name": "hypernode/deploy-configuration",
     "license": "OSL-3.0",
-    "description": "Hipex deploy image configuration files",
+    "description": "Hypernode deploy configuration files",
     "type": "library",
     "autoload": {
         "psr-4": {
