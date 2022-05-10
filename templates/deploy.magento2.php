@@ -1,17 +1,18 @@
 <?php
+
 /**
  * @author Hipex <info@hipex.io>
  * @copyright (c) Hipex B.V. ${year}
  */
 
-namespace HipexDeployConfiguration;
+namespace Hypernode\DeployConfiguration;
 
-use HipexDeployConfiguration\Command\Build\Composer;
-use HipexDeployConfiguration\Command\Command;
-use HipexDeployConfiguration\Command\Deploy\Magento2\CacheFlush;
-use HipexDeployConfiguration\Command\Deploy\Magento2\MaintenanceMode;
-use HipexDeployConfiguration\Command\Deploy\Magento2\SetupUpgrade;
-use HipexDeployConfiguration\Command\Build\Magento2\SetupDiCompile;
+use Hypernode\DeployConfiguration\Command\Build\Composer;
+use Hypernode\DeployConfiguration\Command\Command;
+use Hypernode\DeployConfiguration\Command\Deploy\Magento2\CacheFlush;
+use Hypernode\DeployConfiguration\Command\Deploy\Magento2\MaintenanceMode;
+use Hypernode\DeployConfiguration\Command\Deploy\Magento2\SetupUpgrade;
+use Hypernode\DeployConfiguration\Command\Build\Magento2\SetupDiCompile;
 
 /**
  * Start by setting up the configuration
