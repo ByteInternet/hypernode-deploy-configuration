@@ -8,6 +8,7 @@
             "Hypernode\\DeployConfiguration\\": "src/"
         },
         "files": [
+            "src/autoload.php",
             "src/functions.php"
         ]
     }
