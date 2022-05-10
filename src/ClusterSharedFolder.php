@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @author Emico <info@emico.nl>
- * @copyright (c) Emico B.V. 2020
+ * @author Hypernode
+ * @copyright Copyright (c) Hypernode
  */
 
 declare(strict_types=1);
