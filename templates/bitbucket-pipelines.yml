@@ -1,0 +1,34 @@
+# see https://hub.docker.com/r/hipex/deploy/tags for all possible tags
+# pin the image to a specific version to stay in control with updates 
+image: hipex/deploy:v2.5.0-php7.4-node14
+
+pipelines:
+  branches:
+    # Deploy to test configuration
+    # If you are only deploying to production remove this configuration
+    test:
+      - step:
+          name: build
+          script:
+            - hipex-deploy build -vvv
+          artifacts:
+            - build/**
+      - step:
+          name: deploy
+          deployment: test
+          script:
+            - hipex-deploy deploy test -vvv
+
+    # Deploy to production
+    master:
+      - step:
+          name: build
+          script:
+            - hipex-deploy build
+          artifacts:
+            - build/**
+      - step:
+          name: deploy
+          deployment: production
+          script:
+            - hipex-deploy deploy production
