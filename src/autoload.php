@@ -13,4 +13,4 @@ function bridging_autoloader($class)
     }
 }
 
-spl_autoload_register('bridging_autoloader', true, true);
+spl_autoload_register('bridging_autoloader', true, false);
