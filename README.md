@@ -1,4 +1,4 @@
-# Hipex Deploy Configuration
+# Hypernode Deploy Configuration
 These documentation is the guide to painlessly setup an automated deploy on the [Hipex B.V.](https://www.hipex.io/)
  platform.
 The repository contains:

@@ -1,13 +1,14 @@
 <?php
+
 /**
- * @author Hipex <info@hipex.io>
- * @copyright (c) Hipex B.V. ${year}
+ * @author Hypernode
+ * @copyright Copyright (c) Hypernode
  */
 
-namespace HipexDeployConfiguration;
+namespace Hypernode\DeployConfiguration;
 
-use HipexDeployConfiguration\Configuration;
-use HipexDeployConfiguration\Command;
+use Hypernode\DeployConfiguration\Configuration;
+use Hypernode\DeployConfiguration\Command;
 
 /**
  * Start by setting up the configuration

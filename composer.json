@@ -5,10 +5,11 @@
     "type": "library",
     "autoload": {
         "psr-4": {
-            "HipexDeployConfiguration\\": "src/HipexDeployConfiguration/"
+            "Hypernode\\DeployConfiguration\\": "src/"
         },
         "files": [
-            "src/HipexDeployConfiguration/functions.php"
+            "src/autoload.php",
+            "src/functions.php"
         ]
     }
 }

@@ -2,14 +2,14 @@
 
 namespace Configuration\Deploy;
 
-use HipexDeployConfiguration\Command\Build\Composer;
-use HipexDeployConfiguration\Command\Command;
-use HipexDeployConfiguration\Command\DeployCommand;
-use HipexDeployConfiguration\Command\Deploy\Shopware6\AssetInstall;
-use HipexDeployConfiguration\Command\Deploy\Shopware6\ThemeCompile;
-use HipexDeployConfiguration\Command\Deploy\Shopware6\CacheClear;
-use HipexDeployConfiguration\Configuration;
-use HipexDeployConfiguration\ServerRole;
+use Hypernode\DeployConfiguration\Command\Build\Composer;
+use Hypernode\DeployConfiguration\Command\Command;
+use Hypernode\DeployConfiguration\Command\DeployCommand;
+use Hypernode\DeployConfiguration\Command\Deploy\Shopware6\AssetInstall;
+use Hypernode\DeployConfiguration\Command\Deploy\Shopware6\ThemeCompile;
+use Hypernode\DeployConfiguration\Command\Deploy\Shopware6\CacheClear;
+use Hypernode\DeployConfiguration\Configuration;
+use Hypernode\DeployConfiguration\ServerRole;
 
 class Deploy extends Configuration
 {
@@ -20,7 +20,7 @@ class Deploy extends Configuration
     {
         // TODO: change git repo url to your own
         parent::__construct('git@github.com:HipexBV/DeployConfiguration.git');
-        
+
         $this->setPhpVersion('php73');
 
         $this->configureEnvironments();
@@ -45,7 +45,6 @@ class Deploy extends Configuration
     {
         $this->setSharedFiles(
             [
-                
                 '.env',
             ]
         );
