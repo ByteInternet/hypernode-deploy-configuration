@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @author Hypernode
- * @copyright Copyright (c) Hypernode
- */
-
 namespace Hypernode\DeployConfiguration\AfterDeployTask;
 
 use Hypernode\DeployConfiguration\Exception\EnvironmentVariableNotDefinedException;
