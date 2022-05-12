@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @author Hypernode
- * @copyright Copyright (c) Hypernode
- */
-
 namespace Hypernode\DeployConfiguration\Command\Deploy\Magento2;
 
 use function Deployer\has;

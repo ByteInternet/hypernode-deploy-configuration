@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @author Hypernode
- * @copyright Copyright (c) Hypernode
- */
 /** @noinspection PhpUnhandledExceptionInspection */
 
 // Namespace declaration is not required but just removes the pain of having to use all the config classes separately

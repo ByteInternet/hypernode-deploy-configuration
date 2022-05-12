@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @author Hypernode
- * @copyright Copyright (c) Hypernode
- */
-
 namespace Hypernode\DeployConfiguration\PlatformConfiguration;
 
 use Hypernode\DeployConfiguration\ServerRole;

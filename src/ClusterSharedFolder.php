@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @author Hypernode
- * @copyright Copyright (c) Hypernode
- */
-
 declare(strict_types=1);
 
 namespace Hypernode\DeployConfiguration;
