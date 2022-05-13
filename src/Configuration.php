@@ -423,7 +423,7 @@ class Configuration
     }
 
     /**
-     * @return Command
+     * @return Command[]
      */
     public function getAfterDeployTasks(): array
     {
