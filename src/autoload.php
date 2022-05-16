@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 
 function bridging_autoloader($class)
