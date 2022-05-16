@@ -11,5 +11,8 @@
             "src/autoload.php",
             "src/functions.php"
         ]
+    },
+    "conflict": {
+        "hipex/deploy-configuration": "*"
     }
 }
