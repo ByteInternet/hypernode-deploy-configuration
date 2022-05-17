@@ -28,15 +28,12 @@ class SupervisorConfiguration implements
     /**
      * @param string $sourceFolder Directory containing the supervisor configs in your repository
      */
-    public function __construct($sourceFolder = 'etc/supervisor/')
+    public function __construct(string $sourceFolder = 'etc/supervisor/')
     {
         $this->sourceFolder = $sourceFolder;
     }
 
-    /**
-     * @return string
-     */
-    public function getSourceFolder()
+    public function getSourceFolder(): string
     {
         return $this->sourceFolder;
     }

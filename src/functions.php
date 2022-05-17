@@ -5,8 +5,6 @@ namespace Hypernode\DeployConfiguration;
 use Hypernode\DeployConfiguration\Exception\EnvironmentVariableNotDefinedException;
 
 /**
- * @param string $variable
- * @return string
  * @throws EnvironmentVariableNotDefinedException
  */
 function getenv(string $variable): string

@@ -63,10 +63,6 @@ class RedisService implements TaskConfigurationInterface, ServerRoleConfigurable
         'client-output-buffer-limit pubsub' => '0 0 0',
     ];
 
-    /**
-     * @param string $identifier
-     * @param int    $port
-     */
     public function __construct(string $identifier = 'backend', int $port = 6379)
     {
         $this->identifier = $identifier;
@@ -74,25 +70,16 @@ class RedisService implements TaskConfigurationInterface, ServerRoleConfigurable
         $this->setServerRoles([ServerRole::REDIS]);
     }
 
-    /**
-     * @return string
-     */
     public function getIdentifier(): string
     {
         return $this->identifier;
     }
 
-    /**
-     * @return string
-     */
     public function getMaxMemory(): string
     {
         return $this->maxMemory;
     }
 
-    /**
-     * @param string $maxMemory
-     */
     public function setMaxMemory(string $maxMemory): void
     {
         $this->maxMemory = $maxMemory;
@@ -114,41 +101,26 @@ class RedisService implements TaskConfigurationInterface, ServerRoleConfigurable
         $this->configIncludes = $configIncludes;
     }
 
-    /**
-     * @return int
-     */
     public function getSnapshotSaveFrequency(): int
     {
         return $this->snapshotSaveFrequency;
     }
 
-    /**
-     * @param int $snapshotSaveFrequency
-     */
     public function setSnapshotSaveFrequency(int $snapshotSaveFrequency): void
     {
         $this->snapshotSaveFrequency = $snapshotSaveFrequency;
     }
 
-    /**
-     * @return string|null
-     */
     public function getMasterServer(): ?string
     {
         return $this->masterServer;
     }
 
-    /**
-     * @param string|null $masterServer
-     */
     public function setMasterServer(?string $masterServer): void
     {
         $this->masterServer = $masterServer;
     }
 
-    /**
-     * @return int
-     */
     public function getPort(): int
     {
         return $this->port;
@@ -170,10 +142,6 @@ class RedisService implements TaskConfigurationInterface, ServerRoleConfigurable
         $this->extraSettings = $extraSettings;
     }
 
-    /**
-     * @param string $setting
-     * @param string $value
-     */
     public function setExtraSetting(string $setting, string $value): void
     {
         $this->extraSettings[$setting] = $value;

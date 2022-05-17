@@ -29,16 +29,13 @@ class NginxConfiguration implements
     /**
      * @param string $sourceFolder Location of nginx source files in your repository
      */
-    public function __construct($sourceFolder = 'etc/nginx/')
+    public function __construct(string $sourceFolder = 'etc/nginx/')
     {
         $this->sourceFolder = $sourceFolder;
         $this->setServerRoles([ServerRole::APPLICATION, ServerRole::LOAD_BALANCER]);
     }
 
-    /**
-     * @return string
-     */
-    public function getSourceFolder()
+    public function getSourceFolder(): string
     {
         return $this->sourceFolder;
     }

@@ -73,33 +73,21 @@ class VarnishService implements
         $this->setServerRoles([ServerRole::VARNISH]);
     }
 
-    /**
-     * @return string
-     */
     public function getConfigFile(): string
     {
         return $this->configFile;
     }
 
-    /**
-     * @return int
-     */
     public function getFrontendPort(): int
     {
         return $this->frontendPort;
     }
 
-    /**
-     * @return int
-     */
     public function getBackendPort(): int
     {
         return $this->backendPort;
     }
 
-    /**
-     * @return string
-     */
     public function getMemory(): string
     {
         return $this->memory;
