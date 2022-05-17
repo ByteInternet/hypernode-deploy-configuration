@@ -1,6 +1,6 @@
-# see https://hub.docker.com/r/hipex/deploy/tags for all possible tags
+# see https://hub.docker.com/r/hypernode/deploy/tags for all possible tags
 # pin the image to a specific version to stay in control with updates 
-image: hipex/deploy:v2.5.0-php7.4-node14
+image: hypernode/deploy:alpha
 
 stages:
     - build
@@ -12,7 +12,7 @@ build:
         - test
         - master
     script:
-        - hipex-deploy build
+        - hypernode-deploy build
     artifacts:
         paths:
             - build/**
@@ -24,7 +24,7 @@ deploy_test:
     only:
         - test
     script:
-        - hipex-deploy deploy test -vvv
+        - hypernode-deploy deploy test -vvv
 
 # Deploy to production
 deploy_production:
@@ -32,4 +32,4 @@ deploy_production:
     only:
         - master
     script:
-        - hipex-deploy deploy production
+        - hypernode-deploy deploy production
