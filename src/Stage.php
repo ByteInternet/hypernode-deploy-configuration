@@ -30,13 +30,6 @@ class Stage
      */
     private $name;
 
-    /**
-     * Stage constructor.
-     *
-     * @param string $name
-     * @param string $domain
-     * @param string $username
-     */
     public function __construct(string $name, string $domain, string $username)
     {
         $this->domain = $domain;
@@ -44,17 +37,11 @@ class Stage
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
     public function getDomain(): string
     {
         return $this->domain;
     }
 
-    /**
-     * @return string
-     */
     public function getUsername(): string
     {
         return $this->username;
@@ -62,7 +49,7 @@ class Stage
 
     /**
      * @param string     $hostname
-     * @param array|null $roles
+     * @param array      $roles
      * @param array      $options Extra host options
      * @param array      $sshOptions
      * @return Server
@@ -87,9 +74,6 @@ class Stage
         return $this->servers;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;

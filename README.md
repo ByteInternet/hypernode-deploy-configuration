@@ -63,7 +63,7 @@ For example:
 ``` php
 $stage->addServer(
     'appname.hypernode.io',
-    [ServerRole::APPLICATION],
+    [],
     [],
     ['LogLevel' => 'verbose']
 );
