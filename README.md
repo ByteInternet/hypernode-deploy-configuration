@@ -24,7 +24,7 @@ Change configuration matching you use case, and refer to the documentation for o
     2. Bitbucket [templates/bitbucket-pipelines.yml](./templates/bitbucket-pipelines.yml).
     3. **Github Actions workflow coming soon!**
 4. For Magento 2 your first build will fail due to missing configuration. Login to the server and depending on your project file edit
-the `app/etc/env.php` or `app/etc/local.xml`. You will find these files in `~/apps/<domain>/application/shared/`.
+the `app/etc/env.php` or `app/etc/local.xml`. You will find these files in `~/apps/<domain>/shared/`.
 
 ## Build steps
 
