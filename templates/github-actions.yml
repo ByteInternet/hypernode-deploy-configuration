@@ -1,0 +1,60 @@
+# This file would need to be placed in .github/workflows/deploy.yaml for example
+# In this example, the branches 'master' and 'staging' are used for the production and staging branch, respectively.
+
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'staging'
+
+env:
+  COMPOSER_CACHE_DIR: /tmp/composer-cache
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: docker.hypernode.com/hypernode/docker:alpha
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: /tmp/composer-cache
+          key: ${{ runner.os }}-composer
+      - uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - run: hipex-deploy build -vvv
+      - name: archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployment-build
+          path: build/build.tgz
+
+  deploy_staging:
+    needs: build
+    runs-on: ubuntu-latest
+    container: docker.hypernode.com/hypernode/docker:alpha
+    steps:
+      - uses: actions/checkout@v2
+      - name: download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: deployment-build
+          path: build/
+      - uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - run: mkdir -p $HOME/.ssh
+      - name: deploy to staging
+				if: github.ref == 'refs/heads/staging'
+        run: hipex-deploy deploy staging -vvv
+      - name: deploy to production
+				if: github.ref == 'refs/heads/master'
+        run: hipex-deploy deploy production -vvv
+
