@@ -40,15 +40,12 @@ class CronConfiguration implements
     /**
      * @param string $sourceFile Location of cron file in your repository
      */
-    public function __construct($sourceFile = 'etc/cron')
+    public function __construct(string $sourceFile = 'etc/cron')
     {
         $this->sourceFile = $sourceFile;
     }
 
-    /**
-     * @return string
-     */
-    public function getSourceFile()
+    public function getSourceFile(): string
     {
         return $this->sourceFile;
     }

@@ -35,10 +35,6 @@ class JobQueueConsumer implements
 
     /**
      * Create jobqueue consumer managed by supervisor
-     *
-     * @param string $consumer
-     * @param int    $workers
-     * @param int    $maxMessages
      */
     public function __construct(string $consumer, int $workers = 1, int $maxMessages = 100)
     {
@@ -49,25 +45,16 @@ class JobQueueConsumer implements
         $this->setServerRoles([ServerRole::APPLICATION_FIRST]);
     }
 
-    /**
-     * @return string
-     */
     public function getConsumer(): string
     {
         return $this->consumer;
     }
 
-    /**
-     * @return int
-     */
     public function getMaxMessages(): int
     {
         return $this->maxMessages;
     }
 
-    /**
-     * @return int
-     */
     public function getWorkers(): int
     {
         return $this->workers;

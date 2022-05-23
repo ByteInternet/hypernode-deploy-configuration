@@ -36,7 +36,6 @@ trait ServerRoleConfigurableTrait
     }
 
     /**
-     * @param string $role
      * @return $this
      */
     public function addRole(string $role): self

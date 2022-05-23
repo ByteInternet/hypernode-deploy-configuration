@@ -28,9 +28,6 @@ class Server
     private $sshOptions = [];
 
     /**
-     * Server constructor.
-     *
-     * @param string $hostname
      * @param string[] $roles
      * @param string[] $options
      */
@@ -81,10 +78,6 @@ class Server
         $this->sshOptions = $options;
     }
 
-    /**
-     * @param string $name
-     * @param string $value
-     */
     public function addSshOption(string $name, string $value): void
     {
         $this->sshOptions[$name] = $value;

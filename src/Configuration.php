@@ -92,7 +92,7 @@ class Configuration
     private $afterDeployTasks = [];
 
     /**
-     * Server configurations to automatically provision from your repository to the Hipex platform
+     * Server configurations to automatically provision from your repository to the Hypernode platform
      *
      * @var array
      */
@@ -108,7 +108,7 @@ class Configuration
     /**
      * @var string
      */
-    private $phpVersion = 'php74';
+    private $phpVersion = 'php';
 
     /**
      * @var string
@@ -142,6 +142,7 @@ class Configuration
      * will be replaced based on `$phpVersion` configuration.
      *
      * @var string|null
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     private $dockerBaseImagePhp;
 
@@ -150,6 +151,7 @@ class Configuration
      * Hipex base image `registry.hipex.cloud/hipex-services/docker-image-nginx` will be used.
      *
      * @var string|null
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     private $dockerBaseImageNginx;
 
@@ -161,6 +163,7 @@ class Configuration
      * The final image will have a /php or /nginx added
      *
      * @var string|null
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     private $dockerImage;
 
@@ -168,6 +171,7 @@ class Configuration
      * Registry to push build docker image to. When empty will use `$CI_REGISTRY`.
      *
      * @var string|null
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     private $dockerRegistry;
 
@@ -175,6 +179,7 @@ class Configuration
      * Docker registry username. When empty will `CI_REGISTRY_USER` env variables or just skip login.
      *
      * @var string|null
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     private $dockerRegistryUsername;
 
@@ -182,6 +187,7 @@ class Configuration
      * Docker registry username. When empty will `CI_REGISTRY_PASSWORD` env variables or just skip login.
      *
      * @var string|null
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     private $dockerRegistryPassword;
 
@@ -190,34 +196,21 @@ class Configuration
      * environment. This file is required for features like Hybrid Cloud.
      *
      * @var bool
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     private $daasEnabled = false;
 
-    /**
-     * ServerConfiguration constructor.
-     *
-     * @param string $gitRepository
-     */
     public function __construct(string $gitRepository)
     {
         $this->gitRepository = $gitRepository;
     }
 
-    /**
-     * @return string
-     */
     public function getGitRepository(): string
     {
         return $this->gitRepository;
     }
 
-    /**
-     * @param string $name
-     * @param string $domain
-     * @param string $username
-     * @return Stage
-     */
-    public function addStage(string $name, string $domain, string $username): Stage
+    public function addStage(string $name, string $domain, string $username = 'app'): Stage
     {
         $stage = new Stage($name, $domain, $username);
         $this->stages[] = $stage;
@@ -309,7 +302,6 @@ class Configuration
     }
 
     /**
-     * @param string $folder
      * @return $this
      */
     public function addWritableFolder(string $folder): self
@@ -330,7 +322,7 @@ class Configuration
     }
 
     /**
-     * @param array $excludes
+     * @param string[] $excludes
      * @return $this
      */
     public function setDeployExclude(array $excludes): self
@@ -343,7 +335,6 @@ class Configuration
     }
 
     /**
-     * @param string $exclude
      * @return $this
      */
     public function addDeployExclude(string $exclude): self
@@ -413,7 +404,6 @@ class Configuration
     }
 
     /**
-     * @param DeployCommand $command
      * @return $this
      */
     public function addDeployCommand(DeployCommand $command): self
@@ -444,7 +434,6 @@ class Configuration
     }
 
     /**
-     * @param TaskConfigurationInterface $taskConfig
      * @return $this
      */
     public function addAfterDeployTask(TaskConfigurationInterface $taskConfig): self
@@ -475,7 +464,6 @@ class Configuration
     }
 
     /**
-     * @param TaskConfigurationInterface $platformConfiguration
      * @return Configuration
      */
     public function addPlatformConfiguration(TaskConfigurationInterface $platformConfiguration): self
@@ -506,7 +494,6 @@ class Configuration
     }
 
     /**
-     * @param TaskConfigurationInterface $platformService
      * @return Configuration
      */
     public function addPlatformService(TaskConfigurationInterface $platformService): self
@@ -515,33 +502,21 @@ class Configuration
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPhpVersion(): string
     {
         return $this->phpVersion;
     }
 
-    /**
-     * @param string $phpVersion
-     */
     public function setPhpVersion(string $phpVersion): void
     {
         $this->phpVersion = $phpVersion;
     }
 
-    /**
-     * @return string
-     */
     public function getPublicFolder(): string
     {
         return $this->publicFolder;
     }
 
-    /**
-     * @param string $publicFolder
-     */
     public function setPublicFolder(string $publicFolder): void
     {
         $this->publicFolder = $publicFolder;
@@ -571,25 +546,16 @@ class Configuration
         $this->postInitializeCallbacks[] = $callback;
     }
 
-    /**
-     * @return string
-     */
     public function getBuildArchiveFile(): string
     {
         return $this->buildArchiveFile;
     }
 
-    /**
-     * @param string $buildArchiveFile
-     */
     public function setBuildArchiveFile(string $buildArchiveFile): void
     {
         $this->buildArchiveFile = $buildArchiveFile;
     }
 
-    /**
-     * @return string
-     */
     public function getLogDir(): string
     {
         return $this->logDir;
@@ -597,8 +563,6 @@ class Configuration
 
     /**
      * Directory containing log files
-     *
-     * @param string $logDir
      */
     public function setLogDir(string $logDir): void
     {
@@ -607,6 +571,7 @@ class Configuration
 
     /**
      * @return string|null
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     public function getDockerBaseImagePhp(): ?string
     {
@@ -615,6 +580,7 @@ class Configuration
 
     /**
      * @param string|null $dockerBaseImagePhp
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     public function setDockerBaseImagePhp(?string $dockerBaseImagePhp): void
     {
@@ -623,6 +589,7 @@ class Configuration
 
     /**
      * @return string|null
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     public function getDockerBaseImageNginx(): ?string
     {
@@ -631,6 +598,7 @@ class Configuration
 
     /**
      * @param string|null $dockerBaseImageNginx
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     public function setDockerBaseImageNginx(?string $dockerBaseImageNginx): void
     {
@@ -639,6 +607,7 @@ class Configuration
 
     /**
      * @return string|null
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     public function getDockerImage(): ?string
     {
@@ -647,6 +616,7 @@ class Configuration
 
     /**
      * @param string|null $dockerImage
+     * @deprecated
      */
     public function setDockerImage(?string $dockerImage): void
     {
@@ -663,6 +633,7 @@ class Configuration
 
     /**
      * @param string|null $dockerRegistry
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     public function setDockerRegistry(?string $dockerRegistry): void
     {
@@ -671,6 +642,7 @@ class Configuration
 
     /**
      * @return string|null
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     public function getDockerRegistryUsername(): ?string
     {
@@ -679,6 +651,7 @@ class Configuration
 
     /**
      * @param string|null $dockerRegistryUsername
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     public function setDockerRegistryUsername(?string $dockerRegistryUsername): void
     {
@@ -687,6 +660,7 @@ class Configuration
 
     /**
      * @return string|null
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     public function getDockerRegistryPassword(): ?string
     {
@@ -695,6 +669,7 @@ class Configuration
 
     /**
      * @param string|null $dockerRegistryPassword
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     public function setDockerRegistryPassword(?string $dockerRegistryPassword): void
     {
@@ -702,7 +677,7 @@ class Configuration
     }
 
     /**
-     * @return bool
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     public function isDaasEnabled(): bool
     {
@@ -710,7 +685,7 @@ class Configuration
     }
 
     /**
-     * @param bool $daasEnabled
+     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
      */
     public function setDaasEnabled(bool $daasEnabled): void
     {
