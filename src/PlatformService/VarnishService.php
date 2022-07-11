@@ -9,6 +9,9 @@ use Hypernode\DeployConfiguration\StageConfigurableInterface;
 use Hypernode\DeployConfiguration\StageConfigurableTrait;
 use Hypernode\DeployConfiguration\TaskConfigurationInterface;
 
+/**
+ * @deprecated VarnishService is not supported on the Hypernode platform at the moment and configuration will not be taken into account
+ */
 class VarnishService implements
     TaskConfigurationInterface,
     ServerRoleConfigurableInterface,
