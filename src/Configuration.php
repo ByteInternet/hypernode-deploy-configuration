@@ -4,7 +4,9 @@ namespace Hypernode\DeployConfiguration;
 
 use Hypernode\DeployConfiguration\Command\Command;
 use Hypernode\DeployConfiguration\Command\DeployCommand;
+use Hypernode\DeployConfiguration\Logging\SimpleLogger;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 class Configuration
 {
@@ -147,6 +149,7 @@ class Configuration
     public function __construct(string $gitRepository)
     {
         $this->gitRepository = $gitRepository;
+        $this->logger = new SimpleLogger(LogLevel::INFO);
     }
 
     public function getGitRepository(): string
