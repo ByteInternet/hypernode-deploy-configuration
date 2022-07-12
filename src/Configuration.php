@@ -4,6 +4,9 @@ namespace Hypernode\DeployConfiguration;
 
 use Hypernode\DeployConfiguration\Command\Command;
 use Hypernode\DeployConfiguration\Command\DeployCommand;
+use Hypernode\DeployConfiguration\Logging\SimpleLogger;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 class Configuration
 {
@@ -95,6 +98,7 @@ class Configuration
      * Server configurations to automatically provision from your repository to the Hypernode platform
      *
      * @var array
+     * @deprecated Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
      */
     private $platformConfigurations = [];
 
@@ -102,6 +106,7 @@ class Configuration
      * Addition services to run
      *
      * @var array
+     * @deprecated Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
      */
     private $platformServices = [];
 
@@ -137,72 +142,14 @@ class Configuration
     private $logDir = 'var/log';
 
     /**
-     * Docker imaged used as base to build docker image for PHP-FPM container. Used as docker `FROM` directive. When empty
-     * Hipex base image will be used `registry.hipex.cloud/hipex-services/docker-image-php/<version>-fpm`. The PHP version
-     * will be replaced based on `$phpVersion` configuration.
-     *
-     * @var string|null
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
+     * @var LoggerInterface
      */
-    private $dockerBaseImagePhp;
-
-    /**
-     * Docker imaged used as base to build docker image for nginx container. Used as docker `FROM` directive. When empty
-     * Hipex base image `registry.hipex.cloud/hipex-services/docker-image-nginx` will be used.
-     *
-     * @var string|null
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    private $dockerBaseImageNginx;
-
-    /**
-     * Name of the docker image to build, excluding registry. When empty will try these env variables:
-     *  - $CI_PROJECT_PATH
-     *  - $BITBUCKET_REPO_SLUG
-     *
-     * The final image will have a /php or /nginx added
-     *
-     * @var string|null
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    private $dockerImage;
-
-    /**
-     * Registry to push build docker image to. When empty will use `$CI_REGISTRY`.
-     *
-     * @var string|null
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    private $dockerRegistry;
-
-    /**
-     * Docker registry username. When empty will `CI_REGISTRY_USER` env variables or just skip login.
-     *
-     * @var string|null
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    private $dockerRegistryUsername;
-
-    /**
-     * Docker registry username. When empty will `CI_REGISTRY_PASSWORD` env variables or just skip login.
-     *
-     * @var string|null
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    private $dockerRegistryPassword;
-
-    /**
-     * When DevOps As A Service is enabled a `.hipex-cloud.json` file is generated and uploaded to the production
-     * environment. This file is required for features like Hybrid Cloud.
-     *
-     * @var bool
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    private $daasEnabled = false;
+    private $logger;
 
     public function __construct(string $gitRepository)
     {
         $this->gitRepository = $gitRepository;
+        $this->logger = new SimpleLogger(LogLevel::INFO);
     }
 
     public function getGitRepository(): string
@@ -444,18 +391,28 @@ class Configuration
 
     /**
      * @return TaskConfigurationInterface[]
+     * @deprecated Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
      */
     public function getPlatformConfigurations(): array
     {
+        $this->logger->warning(
+            "Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
+        );
+
         return $this->platformConfigurations;
     }
 
     /**
      * @param TaskConfigurationInterface[] $platformConfigurations
      * @return $this
+     * @deprecated Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
      */
     public function setPlatformConfigurations(array $platformConfigurations): self
     {
+        $this->logger->warning(
+            "Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
+        );
+
         $this->platformConfigurations = [];
         foreach ($platformConfigurations as $serverConfiguration) {
             $this->addPlatformConfiguration($serverConfiguration);
@@ -465,27 +422,42 @@ class Configuration
 
     /**
      * @return Configuration
+     * @deprecated Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
      */
     public function addPlatformConfiguration(TaskConfigurationInterface $platformConfiguration): self
     {
+        $this->logger->warning(
+            "Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
+        );
+
         $this->platformConfigurations[] = $platformConfiguration;
         return $this;
     }
 
     /**
      * @return TaskConfigurationInterface[]
+     * @deprecated Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
      */
     public function getPlatformServices(): array
     {
+        $this->logger->warning(
+            "Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
+        );
+
         return $this->platformServices;
     }
 
     /**
      * @param TaskConfigurationInterface[] $platformServices
      * @return $this
+     * @deprecated Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
      */
     public function setPlatformServices(array $platformServices): self
     {
+        $this->logger->warning(
+            "Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
+        );
+
         $this->platformServices = [];
         foreach ($platformServices as $platformService) {
             $this->addPlatformService($platformService);
@@ -495,9 +467,14 @@ class Configuration
 
     /**
      * @return Configuration
+     * @deprecated Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
      */
     public function addPlatformService(TaskConfigurationInterface $platformService): self
     {
+        $this->logger->warning(
+            "Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
+        );
+
         $this->platformServices[] = $platformService;
         return $this;
     }
@@ -569,126 +546,13 @@ class Configuration
         $this->logDir = $logDir;
     }
 
-    /**
-     * @return string|null
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    public function getDockerBaseImagePhp(): ?string
+    public function getLogger(): LoggerInterface
     {
-        return $this->dockerBaseImagePhp;
+        return $this->logger;
     }
 
-    /**
-     * @param string|null $dockerBaseImagePhp
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    public function setDockerBaseImagePhp(?string $dockerBaseImagePhp): void
+    public function setLogger(LoggerInterface $logger): void
     {
-        $this->dockerBaseImagePhp = $dockerBaseImagePhp;
-    }
-
-    /**
-     * @return string|null
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    public function getDockerBaseImageNginx(): ?string
-    {
-        return $this->dockerBaseImageNginx;
-    }
-
-    /**
-     * @param string|null $dockerBaseImageNginx
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    public function setDockerBaseImageNginx(?string $dockerBaseImageNginx): void
-    {
-        $this->dockerBaseImageNginx = $dockerBaseImageNginx;
-    }
-
-    /**
-     * @return string|null
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    public function getDockerImage(): ?string
-    {
-        return $this->dockerImage;
-    }
-
-    /**
-     * @param string|null $dockerImage
-     * @deprecated
-     */
-    public function setDockerImage(?string $dockerImage): void
-    {
-        $this->dockerImage = $dockerImage;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDockerRegistry(): ?string
-    {
-        return $this->dockerRegistry;
-    }
-
-    /**
-     * @param string|null $dockerRegistry
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    public function setDockerRegistry(?string $dockerRegistry): void
-    {
-        $this->dockerRegistry = $dockerRegistry;
-    }
-
-    /**
-     * @return string|null
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    public function getDockerRegistryUsername(): ?string
-    {
-        return $this->dockerRegistryUsername;
-    }
-
-    /**
-     * @param string|null $dockerRegistryUsername
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    public function setDockerRegistryUsername(?string $dockerRegistryUsername): void
-    {
-        $this->dockerRegistryUsername = $dockerRegistryUsername;
-    }
-
-    /**
-     * @return string|null
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    public function getDockerRegistryPassword(): ?string
-    {
-        return $this->dockerRegistryPassword;
-    }
-
-    /**
-     * @param string|null $dockerRegistryPassword
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    public function setDockerRegistryPassword(?string $dockerRegistryPassword): void
-    {
-        $this->dockerRegistryPassword = $dockerRegistryPassword;
-    }
-
-    /**
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    public function isDaasEnabled(): bool
-    {
-        return $this->daasEnabled;
-    }
-
-    /**
-     * @deprecated DaaS is not supported on Hypernode platform and configuration will not be taken into account
-     */
-    public function setDaasEnabled(bool $daasEnabled): void
-    {
-        $this->daasEnabled = $daasEnabled;
+        $this->logger = $logger;
     }
 }

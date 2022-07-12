@@ -14,5 +14,9 @@
     },
     "conflict": {
         "hipex/deploy-configuration": "*"
+    },
+    "require": {
+        "deployer/deployer": "^6.8",
+        "psr/log": "^1.0"
     }
 }
