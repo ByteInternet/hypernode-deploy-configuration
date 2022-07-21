@@ -87,10 +87,15 @@ class Configuration
     private $deployCommands = [];
 
     /**
-     * Commands to execute after successful deploy. Commonly used to send deploy email or push a New Relic deploy tag.
-     * These commands are run on the production server(s).
+     * Configurations for after deploy tasks. Commonly used to send deploy email or push a New Relic deploy tag.
+     * These after deploy tasks are run on the production server(s).
      *
-     * @var Command[]
+     * @see \Hypernode\DeployConfiguration\AfterDeployTask\Cloudflare
+     * @see \Hypernode\DeployConfiguration\AfterDeployTask\EmailNotification
+     * @see \Hypernode\DeployConfiguration\AfterDeployTask\NewRelic
+     * @see \Hypernode\DeployConfiguration\AfterDeployTask\SlackWebhook
+     *
+     * @var TaskConfigurationInterface[]
      */
     private $afterDeployTasks = [];
 
@@ -360,7 +365,7 @@ class Configuration
     }
 
     /**
-     * @return Command[]
+     * @return TaskConfigurationInterface[]
      */
     public function getAfterDeployTasks(): array
     {
@@ -368,7 +373,7 @@ class Configuration
     }
 
     /**
-     * @param Command[] $afterDeployTasks
+     * @param TaskConfigurationInterface[] $afterDeployTasks
      * @return $this
      */
     public function setAfterDeployTasks($afterDeployTasks): self
