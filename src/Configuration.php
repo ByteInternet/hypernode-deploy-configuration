@@ -221,9 +221,6 @@ class Configuration
         return $this->writableFolders;
     }
 
-    /**
-     * @return $this
-     */
     public function addWritableFolder(string $folder): self
     {
         $this->writableFolders[] = $folder;
@@ -243,7 +240,6 @@ class Configuration
 
     /**
      * @param string[] $excludes
-     * @return $this
      */
     public function setDeployExclude(array $excludes): self
     {
@@ -254,9 +250,6 @@ class Configuration
         return $this;
     }
 
-    /**
-     * @return $this
-     */
     public function addDeployExclude(string $exclude): self
     {
         $this->deployExclude[] = $exclude;
@@ -281,7 +274,6 @@ class Configuration
 
     /**
      * @param Command[] $buildCommands
-     * @return $this
      */
     public function setBuildCommands(array $buildCommands): self
     {
@@ -292,10 +284,6 @@ class Configuration
         return $this;
     }
 
-    /**
-     * @param Command $command
-     * @return $this
-     */
     public function addBuildCommand(Command $command): self
     {
         $this->buildCommands[] = $command;
@@ -312,7 +300,6 @@ class Configuration
 
     /**
      * @param DeployCommand[] $deployCommands
-     * @return $this
      */
     public function setDeployCommands($deployCommands): self
     {
@@ -323,9 +310,6 @@ class Configuration
         return $this;
     }
 
-    /**
-     * @return $this
-     */
     public function addDeployCommand(DeployCommand $command): self
     {
         $this->deployCommands[] = $command;
@@ -353,9 +337,6 @@ class Configuration
         return $this;
     }
 
-    /**
-     * @return $this
-     */
     public function addAfterDeployTask(TaskConfigurationInterface $taskConfig): self
     {
         $this->afterDeployTasks[] = $taskConfig;
@@ -382,25 +363,16 @@ class Configuration
         $this->publicFolder = $publicFolder;
     }
 
-    /**
-     * @return array
-     */
     public function getPostInitializeCallbacks(): array
     {
         return $this->postInitializeCallbacks;
     }
 
-    /**
-     * @param array $callbacks
-     */
     public function setPostInitializeCallbacks(array $callbacks): void
     {
         $this->postInitializeCallbacks = $callbacks;
     }
 
-    /**
-     * @param callable $callback
-     */
     public function addPostInitializeCallback(callable $callback)
     {
         $this->postInitializeCallbacks[] = $callback;
