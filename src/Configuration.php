@@ -100,22 +100,6 @@ class Configuration
     private $afterDeployTasks = [];
 
     /**
-     * Server configurations to automatically provision from your repository to the Hypernode platform
-     *
-     * @var array
-     * @deprecated Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
-     */
-    private $platformConfigurations = [];
-
-    /**
-     * Addition services to run
-     *
-     * @var array
-     * @deprecated Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
-     */
-    private $platformServices = [];
-
-    /**
      * @var string
      */
     private $phpVersion = 'php';
@@ -391,96 +375,6 @@ class Configuration
     public function addAfterDeployTask(TaskConfigurationInterface $taskConfig): self
     {
         $this->afterDeployTasks[] = $taskConfig;
-        return $this;
-    }
-
-    /**
-     * @return TaskConfigurationInterface[]
-     * @deprecated Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
-     */
-    public function getPlatformConfigurations(): array
-    {
-        $this->logger->warning(
-            "Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
-        );
-
-        return $this->platformConfigurations;
-    }
-
-    /**
-     * @param TaskConfigurationInterface[] $platformConfigurations
-     * @return $this
-     * @deprecated Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
-     */
-    public function setPlatformConfigurations(array $platformConfigurations): self
-    {
-        $this->logger->warning(
-            "Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
-        );
-
-        $this->platformConfigurations = [];
-        foreach ($platformConfigurations as $serverConfiguration) {
-            $this->addPlatformConfiguration($serverConfiguration);
-        }
-        return $this;
-    }
-
-    /**
-     * @return Configuration
-     * @deprecated Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
-     */
-    public function addPlatformConfiguration(TaskConfigurationInterface $platformConfiguration): self
-    {
-        $this->logger->warning(
-            "Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
-        );
-
-        $this->platformConfigurations[] = $platformConfiguration;
-        return $this;
-    }
-
-    /**
-     * @return TaskConfigurationInterface[]
-     * @deprecated Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
-     */
-    public function getPlatformServices(): array
-    {
-        $this->logger->warning(
-            "Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
-        );
-
-        return $this->platformServices;
-    }
-
-    /**
-     * @param TaskConfigurationInterface[] $platformServices
-     * @return $this
-     * @deprecated Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
-     */
-    public function setPlatformServices(array $platformServices): self
-    {
-        $this->logger->warning(
-            "Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
-        );
-
-        $this->platformServices = [];
-        foreach ($platformServices as $platformService) {
-            $this->addPlatformService($platformService);
-        }
-        return $this;
-    }
-
-    /**
-     * @return Configuration
-     * @deprecated Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
-     */
-    public function addPlatformService(TaskConfigurationInterface $platformService): self
-    {
-        $this->logger->warning(
-            "Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
-        );
-
-        $this->platformServices[] = $platformService;
         return $this;
     }
 
