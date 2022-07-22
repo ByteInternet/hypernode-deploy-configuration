@@ -2,10 +2,8 @@
 
 namespace Hypernode\DeployConfiguration\ApplicationTemplate;
 
-use Hypernode\DeployConfiguration\ClusterSharedFolder;
 use Hypernode\DeployConfiguration\Configuration;
 use Hypernode\DeployConfiguration\Command;
-use Hypernode\DeployConfiguration\SharedFolder;
 
 class Magento2 extends Configuration
 {
@@ -47,10 +45,10 @@ class Magento2 extends Configuration
         ]);
 
         $this->setSharedFolders([
-            new SharedFolder('var/log'),
-            new SharedFolder('var/report'),
-            new ClusterSharedFolder('var/session'),
-            new ClusterSharedFolder('pub/media'),
+            'var/log',
+            'var/report',
+            'var/session',
+            'pub/media',
         ]);
 
         $this->addDeployExclude('phpserver/');

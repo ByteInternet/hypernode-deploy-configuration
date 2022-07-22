@@ -45,14 +45,14 @@ class Configuration
 
     /**
      * Shared folders between deploys. Commonly used for `media`, `var/import` folders etc.
-     * @var SharedFolder[]
+     * @var string[]
      */
     private $sharedFolders = [];
 
     /**
      * Files shared between deploys. Commonly used for database configurations etc.
      *
-     * @var SharedFile[]
+     * @var string[]
      */
     private $sharedFiles = [];
 
@@ -162,8 +162,7 @@ class Configuration
     }
 
     /**
-     * @param SharedFolder[]|string[] $folders
-     * @return $this
+     * @param string[] $folders
      */
     public function setSharedFolders(array $folders): self
     {
@@ -174,21 +173,14 @@ class Configuration
         return $this;
     }
 
-    /**
-     * @param SharedFolder|string $folder
-     * @return $this
-     */
-    public function addSharedFolder($folder): self
+    public function addSharedFolder(string $folder): self
     {
-        if (!$folder instanceof SharedFolder) {
-            $folder = new SharedFolder($folder);
-        }
         $this->sharedFolders[] = $folder;
         return $this;
     }
 
     /**
-     * @return SharedFolder[]
+     * @return string[]
      */
     public function getSharedFolders(): array
     {
@@ -196,8 +188,7 @@ class Configuration
     }
 
     /**
-     * @param SharedFile[]|string[] $files
-     * @return $this
+     * @param string[] $files
      */
     public function setSharedFiles(array $files): self
     {
@@ -208,21 +199,14 @@ class Configuration
         return $this;
     }
 
-    /**
-     * @param SharedFile|string $file
-     * @return $this
-     */
-    public function addSharedFile($file): self
+    public function addSharedFile(string $file): self
     {
-        if (!$file instanceof SharedFile) {
-            $file = new SharedFile($file);
-        }
         $this->sharedFiles[] = $file;
         return $this;
     }
 
     /**
-     * @return SharedFile[]
+     * @return string[]
      */
     public function getSharedFiles(): array
     {
