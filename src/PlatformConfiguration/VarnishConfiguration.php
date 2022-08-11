@@ -24,6 +24,7 @@ class VarnishConfiguration implements
     private const DEFAULT_BACKEND_PORT = 6082;
     private const DEFAULT_CONFIG_FILE = 'etc/varnish.vcl';
     private const DEFAULT_VARNISH_VERSION = '4.0';
+    private const DEFAULT_VARNISH_MEMORY = 1024;
 
     /**
      * @var int
@@ -46,6 +47,16 @@ class VarnishConfiguration implements
     private $version;
 
     /**
+     * @var int
+     */
+    private $memory;
+
+    /**
+     * @var bool
+     */
+    private $useSupervisor;
+
+    /**
      * @var array
      */
     private $arguments;
@@ -55,6 +66,8 @@ class VarnishConfiguration implements
      * @param int $backendPort
      * @param string $configFile
      * @param string $version
+     * @param int $memory
+     * @param bool $useSupervisor
      * @param array $arguments
      */
     public function __construct(
@@ -62,12 +75,16 @@ class VarnishConfiguration implements
         $backendPort = self::DEFAULT_BACKEND_PORT,
         $configFile = self::DEFAULT_CONFIG_FILE,
         $version = self::DEFAULT_VARNISH_VERSION,
+        $memory = self::DEFAULT_VARNISH_MEMORY,
+        $useSupervisor = false,
         array $arguments = []
     ) {
         $this->frontendPort = $frontendPort;
         $this->backendPort = $backendPort;
         $this->configFile = $configFile;
         $this->version = $version;
+        $this->memory = $memory;
+        $this->useSupervisor = $useSupervisor;
         $this->arguments = $arguments;
 
         $this->setServerRoles([ServerRole::APPLICATION, ServerRole::LOAD_BALANCER]);
@@ -93,6 +110,16 @@ class VarnishConfiguration implements
         return $this->version;
     }
 
+    public function getMemory(): int
+    {
+        return $this->memory;
+    }
+
+    public function useSupervisor(): bool
+    {
+        return $this->useSupervisor;
+    }
+    
     /**
      * @return array
      */
