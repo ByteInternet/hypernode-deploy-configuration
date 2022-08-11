@@ -1,120 +1,16 @@
 <?php
 
-namespace Configuration\Deploy;
+namespace Hypernode\DeployConfiguration;
 
-use Hypernode\DeployConfiguration\Command\Build\Composer;
-use Hypernode\DeployConfiguration\Command\Deploy\Shopware6\AssetInstall;
-use Hypernode\DeployConfiguration\Command\Deploy\Shopware6\ThemeCompile;
-use Hypernode\DeployConfiguration\Command\Deploy\Shopware6\CacheClear;
-use Hypernode\DeployConfiguration\Configuration;
+/**
+ * Start by setting up the configuration
+ *
+ * The Shopware 6 configuration contains some default configuration for shared folders / files and running installers
+ * @see ApplicationTemplate\Shopware6::initializeDefaultConfiguration
+ */
+$configuration = new ApplicationTemplate\Shopware6();
 
-class Deploy extends Configuration
-{
-    /**
-     * Deploy constructor.
-     */
-    public function __construct()
-    {
-        // TODO: change git repo url to your own
-        parent::__construct('git@github.com:ByteInternet/deploy-configuration.git');
+$productionStage = $configuration->addStage('production', 'example.com');
+$productionStage->addServer('appname.hypernode.io');
 
-        $this->setPhpVersion('7.3');
-
-        $this->configureEnvironments();
-        $this->configureShared();
-        $this->configureBuild();
-        $this->configureDeploy();
-        $this->configureExcluded();
-    }
-
-    private function configureEnvironments()
-    {
-        $this->configureEnvironmentStaging();
-    }
-
-    private function configureEnvironmentStaging()
-    {
-        $stageStaging = $this->addStage('staging', 'staging.example.com');
-        $stageStaging->addServer('stagingappname.hypernode.io');
-    }
-
-    private function configureShared()
-    {
-        $this->setSharedFiles(
-            [
-                '.env',
-            ]
-        );
-        $this->setSharedFolders(
-            [
-                'config/jwt', // generate this app secret once after initial deployment, by ssh'ing into your server and executing `bin/console system:generate-jwt-secret` from within the `application/current` folder. 
-                'var/log',
-                'public/sitemap',
-                'public/media',
-                'public/thumbnail'
-            ]
-        );
-    }
-
-    private function configureExcluded()
-    {
-        $ignored = [
-            '/.git',
-            '/.idea',
-            './.github',
-            './deploy.php',
-            '.DS_Store',
-            '.gitignore',
-            '*.less',
-            '*.jsx',
-            '*.ts',
-            '/bin',
-            '/build',
-            '/config',
-            '/public',
-            '/src',
-            '/.editorconfig',
-            '/.env',
-            '/.env.dist',
-            '/.psh.yaml.dist',
-            '/.dockerignore',
-            '/.gitlab-ci.yml',
-            '/.htaccess',
-            '/bitbucket-pipelines.yml',
-            '/docker-compose.yml',
-            '/docker-compose.override.yml',
-            '/license.txt',
-            '/phpunit.xml.dist',
-            '/psh.phar',
-            'composer-cache',
-            'auth.json',
-            'COPYING*',
-            'LICENSE*',
-            'CHANGELOG*'
-        ];
-        $this->setDeployExclude($ignored);
-    }
-
-    private function configureBuild()
-    {
-        $installArguments = [
-            '--verbose',
-            '--no-progress',
-            '--no-interaction',
-            '--optimize-autoloader',
-            '--ignore-platform-reqs',
-        ];
-
-        $this->addBuildCommand(new Composer($installArguments));
-    }
-
-    private function configureDeploy()
-    {
-        // Commands that require database access must run as deploy command and run on the server, whilest build commands run in your CI container. 
-        $this->addDeployCommand(new AssetInstall());
-        $this->addDeployCommand(new ThemeCompile());
-        $this->addDeployCommand(new CacheClear());
-    }
-}
-
-return new Deploy();
+return $configuration;

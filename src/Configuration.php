@@ -2,11 +2,11 @@
 
 namespace Hypernode\DeployConfiguration;
 
-use Hypernode\DeployConfiguration\Command\Command;
-use Hypernode\DeployConfiguration\Command\DeployCommand;
 use Hypernode\DeployConfiguration\Logging\SimpleLogger;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+
+use function Deployer\task;
 
 class Configuration
 {
@@ -30,11 +30,15 @@ class Configuration
     ];
 
     /**
-     * Git repository of the project, this is required.
-     *
-     * @var string
+     * Default composer options
      */
-    private $gitRepository;
+    public const DEFAULT_COMPOSER_OPTIONS = [
+        '--verbose',
+        '--no-progress',
+        '--no-interaction',
+        '--optimize-autoloader',
+        '--no-dev',
+    ];
 
     /**
      * Deploy stages / environments. Usually production and test.
@@ -72,19 +76,19 @@ class Configuration
     private $deployExclude = self::DEFAULT_DEPLOY_EXCLUDE;
 
     /**
-     * Commands to run prior to deploying the application to build everything. For example de M2 static content deploy
+     * Tasks to run prior to deploying the application to build everything. For example M2 static content deploy
      * or running your gulp build.
      *
-     * @var Command[]
+     * @var string[]
      */
-    private $buildCommands = [];
+    private $buildTasks = [];
 
     /**
-     * Commands to run on all or specific servers to deploy.
+     * Tasks to run on all or specific servers to deploy.
      *
-     * @var DeployCommand[]
+     * @var string[]
      */
-    private $deployCommands = [];
+    private $deployTasks = [];
 
     /**
      * Configurations for after deploy tasks. Commonly used to send deploy email or push a New Relic deploy tag.
@@ -98,6 +102,11 @@ class Configuration
      * @var TaskConfigurationInterface[]
      */
     private $afterDeployTasks = [];
+
+    /**
+     * @var TaskConfigurationInterface[]
+     */
+    private $platformConfigurations = [];
 
     /**
      * @var string
@@ -135,15 +144,93 @@ class Configuration
      */
     private $logger;
 
-    public function __construct(string $gitRepository)
+    /**
+     * @var array
+     * @psalm-var array<string, mixed>
+     */
+    private $deployerVariables = [];
+
+    /**
+     * @var string
+     */
+    private $recipe = '';
+
+    public function __construct()
     {
-        $this->gitRepository = $gitRepository;
         $this->logger = new SimpleLogger(LogLevel::INFO);
+        $this->setDefaultComposerOptions();
     }
 
-    public function getGitRepository(): string
+    public function setRecipe(string $recipe)
     {
-        return $this->gitRepository;
+        RecipeLoader::get()->loadRecipe($recipe);
+        $this->recipe = $recipe;
+    }
+
+    public function getRecipe(): string
+    {
+        return $this->recipe;
+    }
+
+    private function validateTask(string $task): bool
+    {
+        try {
+            task($task);
+        } catch (\InvalidArgumentException $e) {
+            return false;
+        }
+        return true;
+    }
+
+    public function addBuildTask(string $task): void
+    {
+        if ($this->validateTask($task)) {
+            $this->buildTasks[] = $task;
+        } else {
+            throw new \RuntimeException(sprintf("Build task %s does not exist!", $task));
+        }
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getBuildTasks(): array
+    {
+        return $this->buildTasks;
+    }
+
+    public function addDeployTask(string $task): void
+    {
+        if ($this->validateTask($task)) {
+            $this->deployTasks[] = $task;
+        } else {
+            throw new \RuntimeException(sprintf("Deploy task %s does not exist!", $task));
+        }
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getDeployTasks(): array
+    {
+        return $this->deployTasks;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function setVariable(string $key, $value, string $stage = 'all'): void
+    {
+        $this->deployerVariables[$stage][$key] = $value;
+    }
+
+    /**
+     * @return array
+     * @psalm-return array<string, mixed>
+     */
+    public function getVariables(string $stage = 'all'): array
+    {
+        return $this->deployerVariables[$stage] ?? [];
     }
 
     public function addStage(string $name, string $domain, string $username = 'app'): Stage
@@ -151,6 +238,20 @@ class Configuration
         $stage = new Stage($name, $domain, $username);
         $this->stages[] = $stage;
         return $stage;
+    }
+
+    /**
+     * @param string[] $options
+     * @return void
+     */
+    public function setComposerOptions(array $options): void
+    {
+        $this->setVariable('composer_options', implode(' ', $options));
+    }
+
+    public function setDefaultComposerOptions(): void
+    {
+        $this->setComposerOptions(self::DEFAULT_COMPOSER_OPTIONS);
     }
 
     /**
@@ -265,58 +366,6 @@ class Configuration
     }
 
     /**
-     * @return Command[]
-     */
-    public function getBuildCommands(): array
-    {
-        return $this->buildCommands;
-    }
-
-    /**
-     * @param Command[] $buildCommands
-     */
-    public function setBuildCommands(array $buildCommands): self
-    {
-        $this->buildCommands = [];
-        foreach ($buildCommands as $command) {
-            $this->addBuildCommand($command);
-        }
-        return $this;
-    }
-
-    public function addBuildCommand(Command $command): self
-    {
-        $this->buildCommands[] = $command;
-        return $this;
-    }
-
-    /**
-     * @return DeployCommand[]
-     */
-    public function getDeployCommands(): array
-    {
-        return $this->deployCommands;
-    }
-
-    /**
-     * @param DeployCommand[] $deployCommands
-     */
-    public function setDeployCommands($deployCommands): self
-    {
-        $this->deployCommands = [];
-        foreach ($deployCommands as $command) {
-            $this->addDeployCommand($command);
-        }
-        return $this;
-    }
-
-    public function addDeployCommand(DeployCommand $command): self
-    {
-        $this->deployCommands[] = $command;
-        return $this;
-    }
-
-    /**
      * @return TaskConfigurationInterface[]
      */
     public function getAfterDeployTasks(): array
@@ -326,7 +375,6 @@ class Configuration
 
     /**
      * @param TaskConfigurationInterface[] $afterDeployTasks
-     * @return $this
      */
     public function setAfterDeployTasks($afterDeployTasks): self
     {
@@ -340,6 +388,36 @@ class Configuration
     public function addAfterDeployTask(TaskConfigurationInterface $taskConfig): self
     {
         $this->afterDeployTasks[] = $taskConfig;
+        return $this;
+    }
+
+    /**
+     * @return TaskConfigurationInterface[]
+     */
+    public function getPlatformConfigurations(): array
+    {
+        return $this->platformConfigurations;
+    }
+
+    /**
+     * @param TaskConfigurationInterface[] $platformConfigurations
+     * @return $this
+     */
+    public function setPlatformConfigurations(array $platformConfigurations): self
+    {
+        $this->platformConfigurations = [];
+        foreach ($platformConfigurations as $serverConfiguration) {
+            $this->addPlatformConfiguration($serverConfiguration);
+        }
+        return $this;
+    }
+
+    /**
+     * @return Configuration
+     */
+    public function addPlatformConfiguration(TaskConfigurationInterface $platformConfiguration): self
+    {
+        $this->platformConfigurations[] = $platformConfiguration;
         return $this;
     }
 

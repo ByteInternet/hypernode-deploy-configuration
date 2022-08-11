@@ -3,45 +3,42 @@
 namespace Hypernode\DeployConfiguration\ApplicationTemplate;
 
 use Hypernode\DeployConfiguration\Configuration;
-use Hypernode\DeployConfiguration\Command;
 
 class Magento2 extends Configuration
 {
     /**
-     * Magento2 constructor.
-     *
-     * @param string $gitRepository
-     * @param array|null $localesFrontend
-     * @param array|null $localesBackend
+     * @param string[] $locales
      */
-    public function __construct(string $gitRepository, array $localesFrontend, array $localesBackend)
+    public function __construct(array $locales)
     {
-        parent::__construct($gitRepository);
+        parent::__construct();
 
-        $this->initializeDefaultConfiguration($localesFrontend, $localesBackend);
+        $this->initializeDefaultConfiguration($locales);
     }
 
     /**
      * Initialize defaults
      *
-     * @param array|null $localesFrontend
-     * @param array|null $localesBackend
+     * @param string[] $locales
      */
-    private function initializeDefaultConfiguration(array $localesFrontend = null, array $localesBackend = null): void
+    private function initializeDefaultConfiguration(array $locales): void
     {
-        $this->setPhpVersion('php71');
-        $this->addBuildCommand(new Command\Build\Composer());
-        $this->addBuildCommand(new Command\Build\Magento2\SetupDiCompile());
-        $this->addBuildCommand(new Command\Build\Magento2\SetupStaticContentDeploy($localesFrontend, 'frontend'));
-        $this->addBuildCommand(new Command\Build\Magento2\SetupStaticContentDeploy($localesBackend, 'adminhtml'));
+        $this->setRecipe('magento2');
+        $this->setVariable('static_content_locales', $locales);
+        $this->setVariable('ENV', ['MAGE_MODE' => 'production'], 'build');
 
-        $this->addDeployCommand(new Command\Deploy\Magento2\MaintenanceMode());
-        $this->addDeployCommand(new Command\Deploy\Magento2\SetupUpgrade());
-        $this->addDeployCommand(new Command\Deploy\Magento2\CacheFlush());
+        $this->addBuildTask('deploy:vendors');
+        $this->addBuildTask('magento:compile');
+        $this->addBuildTask('magento:deploy:assets');
+
+        $this->addDeployTask('magento:config:import');
+        $this->addDeployTask('magento:upgrade:db');
+        $this->addDeployTask('magento:cache:flush');
 
         $this->setSharedFiles([
             'app/etc/env.php',
             'pub/errors/local.xml',
+            'pub/.user.ini',
         ]);
 
         $this->setSharedFolders([
