@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Hypernode\DeployConfiguration\PlatformConfiguration;
-
 
 use Hypernode\DeployConfiguration\ServerRoleConfigurableInterface;
 use Hypernode\DeployConfiguration\ServerRoleConfigurableTrait;
