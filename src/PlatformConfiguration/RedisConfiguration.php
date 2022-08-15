@@ -122,7 +122,7 @@ class RedisConfiguration implements
     /**
      * @return bool
      */
-    public function getUseSupervisor(): bool
+    public function useSupervisor(): bool
     {
         return $this->useSupervisor;
     }
