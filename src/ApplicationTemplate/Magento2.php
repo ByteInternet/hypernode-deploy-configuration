@@ -24,8 +24,8 @@ class Magento2 extends Configuration
     private function initializeDefaultConfiguration(array $locales): void
     {
         $this->setRecipe('magento2');
-        $this->setVariable('static_content_locales', $locales);
-        $this->setVariable('ENV', ['MAGE_MODE' => 'production'], 'build');
+        $this->setVariable('static_content_locales', implode(' ', $locales));
+        $this->setVariable('env', ['MAGE_MODE' => 'production'], 'build');
 
         $this->addBuildTask('deploy:vendors');
         $this->addBuildTask('magento:compile');
