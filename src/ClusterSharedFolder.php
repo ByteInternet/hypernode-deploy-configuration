@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Hypernode\DeployConfiguration;
 
 /**
- * Folder will be shared over releases and all servers within cluster
+ * @deprecated This class has been deprecated as DaaS configurations have been removed.
  */
 class ClusterSharedFolder extends SharedFolder
 {

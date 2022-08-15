@@ -2,11 +2,11 @@
 
 namespace Hypernode\DeployConfiguration;
 
-use Hypernode\DeployConfiguration\Command\Command;
-use Hypernode\DeployConfiguration\Command\DeployCommand;
 use Hypernode\DeployConfiguration\Logging\SimpleLogger;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+
+use function Deployer\task;
 
 class Configuration
 {
@@ -30,11 +30,15 @@ class Configuration
     ];
 
     /**
-     * Git repository of the project, this is required.
-     *
-     * @var string
+     * Default composer options
      */
-    private $gitRepository;
+    public const DEFAULT_COMPOSER_OPTIONS = [
+        '--verbose',
+        '--no-progress',
+        '--no-interaction',
+        '--optimize-autoloader',
+        '--no-dev',
+    ];
 
     /**
      * Deploy stages / environments. Usually production and test.
@@ -45,14 +49,14 @@ class Configuration
 
     /**
      * Shared folders between deploys. Commonly used for `media`, `var/import` folders etc.
-     * @var SharedFolder[]
+     * @var string[]
      */
     private $sharedFolders = [];
 
     /**
      * Files shared between deploys. Commonly used for database configurations etc.
      *
-     * @var SharedFile[]
+     * @var string[]
      */
     private $sharedFiles = [];
 
@@ -72,19 +76,19 @@ class Configuration
     private $deployExclude = self::DEFAULT_DEPLOY_EXCLUDE;
 
     /**
-     * Commands to run prior to deploying the application to build everything. For example de M2 static content deploy
+     * Tasks to run prior to deploying the application to build everything. For example M2 static content deploy
      * or running your gulp build.
      *
-     * @var Command[]
+     * @var string[]
      */
-    private $buildCommands = [];
+    private $buildTasks = [];
 
     /**
-     * Commands to run on all or specific servers to deploy.
+     * Tasks to run on all or specific servers to deploy.
      *
-     * @var DeployCommand[]
+     * @var string[]
      */
-    private $deployCommands = [];
+    private $deployTasks = [];
 
     /**
      * Configurations for after deploy tasks. Commonly used to send deploy email or push a New Relic deploy tag.
@@ -100,20 +104,9 @@ class Configuration
     private $afterDeployTasks = [];
 
     /**
-     * Server configurations to automatically provision from your repository to the Hypernode platform
-     *
-     * @var array
-     * @deprecated Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
+     * @var TaskConfigurationInterface[]
      */
     private $platformConfigurations = [];
-
-    /**
-     * Addition services to run
-     *
-     * @var array
-     * @deprecated Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
-     */
-    private $platformServices = [];
 
     /**
      * @var string
@@ -151,15 +144,93 @@ class Configuration
      */
     private $logger;
 
-    public function __construct(string $gitRepository)
+    /**
+     * @var array
+     * @psalm-var array<string, mixed>
+     */
+    private $deployerVariables = [];
+
+    /**
+     * @var string
+     */
+    private $recipe = '';
+
+    public function __construct()
     {
-        $this->gitRepository = $gitRepository;
         $this->logger = new SimpleLogger(LogLevel::INFO);
+        $this->setDefaultComposerOptions();
     }
 
-    public function getGitRepository(): string
+    public function setRecipe(string $recipe)
     {
-        return $this->gitRepository;
+        RecipeLoader::get()->loadRecipe($recipe);
+        $this->recipe = $recipe;
+    }
+
+    public function getRecipe(): string
+    {
+        return $this->recipe;
+    }
+
+    private function validateTask(string $task): bool
+    {
+        try {
+            task($task);
+        } catch (\InvalidArgumentException $e) {
+            return false;
+        }
+        return true;
+    }
+
+    public function addBuildTask(string $task): void
+    {
+        if ($this->validateTask($task)) {
+            $this->buildTasks[] = $task;
+        } else {
+            throw new \RuntimeException(sprintf("Build task %s does not exist!", $task));
+        }
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getBuildTasks(): array
+    {
+        return $this->buildTasks;
+    }
+
+    public function addDeployTask(string $task): void
+    {
+        if ($this->validateTask($task)) {
+            $this->deployTasks[] = $task;
+        } else {
+            throw new \RuntimeException(sprintf("Deploy task %s does not exist!", $task));
+        }
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getDeployTasks(): array
+    {
+        return $this->deployTasks;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function setVariable(string $key, $value, string $stage = 'all'): void
+    {
+        $this->deployerVariables[$stage][$key] = $value;
+    }
+
+    /**
+     * @return array
+     * @psalm-return array<string, mixed>
+     */
+    public function getVariables(string $stage = 'all'): array
+    {
+        return $this->deployerVariables[$stage] ?? [];
     }
 
     public function addStage(string $name, string $domain, string $username = 'app'): Stage
@@ -167,6 +238,20 @@ class Configuration
         $stage = new Stage($name, $domain, $username);
         $this->stages[] = $stage;
         return $stage;
+    }
+
+    /**
+     * @param string[] $options
+     * @return void
+     */
+    public function setComposerOptions(array $options): void
+    {
+        $this->setVariable('composer_options', implode(' ', $options));
+    }
+
+    public function setDefaultComposerOptions(): void
+    {
+        $this->setComposerOptions(self::DEFAULT_COMPOSER_OPTIONS);
     }
 
     /**
@@ -178,8 +263,7 @@ class Configuration
     }
 
     /**
-     * @param SharedFolder[]|string[] $folders
-     * @return $this
+     * @param string[] $folders
      */
     public function setSharedFolders(array $folders): self
     {
@@ -190,21 +274,14 @@ class Configuration
         return $this;
     }
 
-    /**
-     * @param SharedFolder|string $folder
-     * @return $this
-     */
-    public function addSharedFolder($folder): self
+    public function addSharedFolder(string $folder): self
     {
-        if (!$folder instanceof SharedFolder) {
-            $folder = new SharedFolder($folder);
-        }
         $this->sharedFolders[] = $folder;
         return $this;
     }
 
     /**
-     * @return SharedFolder[]
+     * @return string[]
      */
     public function getSharedFolders(): array
     {
@@ -212,8 +289,7 @@ class Configuration
     }
 
     /**
-     * @param SharedFile[]|string[] $files
-     * @return $this
+     * @param string[] $files
      */
     public function setSharedFiles(array $files): self
     {
@@ -224,21 +300,14 @@ class Configuration
         return $this;
     }
 
-    /**
-     * @param SharedFile|string $file
-     * @return $this
-     */
-    public function addSharedFile($file): self
+    public function addSharedFile(string $file): self
     {
-        if (!$file instanceof SharedFile) {
-            $file = new SharedFile($file);
-        }
         $this->sharedFiles[] = $file;
         return $this;
     }
 
     /**
-     * @return SharedFile[]
+     * @return string[]
      */
     public function getSharedFiles(): array
     {
@@ -253,9 +322,6 @@ class Configuration
         return $this->writableFolders;
     }
 
-    /**
-     * @return $this
-     */
     public function addWritableFolder(string $folder): self
     {
         $this->writableFolders[] = $folder;
@@ -275,7 +341,6 @@ class Configuration
 
     /**
      * @param string[] $excludes
-     * @return $this
      */
     public function setDeployExclude(array $excludes): self
     {
@@ -286,9 +351,6 @@ class Configuration
         return $this;
     }
 
-    /**
-     * @return $this
-     */
     public function addDeployExclude(string $exclude): self
     {
         $this->deployExclude[] = $exclude;
@@ -304,67 +366,6 @@ class Configuration
     }
 
     /**
-     * @return Command[]
-     */
-    public function getBuildCommands(): array
-    {
-        return $this->buildCommands;
-    }
-
-    /**
-     * @param Command[] $buildCommands
-     * @return $this
-     */
-    public function setBuildCommands(array $buildCommands): self
-    {
-        $this->buildCommands = [];
-        foreach ($buildCommands as $command) {
-            $this->addBuildCommand($command);
-        }
-        return $this;
-    }
-
-    /**
-     * @param Command $command
-     * @return $this
-     */
-    public function addBuildCommand(Command $command): self
-    {
-        $this->buildCommands[] = $command;
-        return $this;
-    }
-
-    /**
-     * @return DeployCommand[]
-     */
-    public function getDeployCommands(): array
-    {
-        return $this->deployCommands;
-    }
-
-    /**
-     * @param DeployCommand[] $deployCommands
-     * @return $this
-     */
-    public function setDeployCommands($deployCommands): self
-    {
-        $this->deployCommands = [];
-        foreach ($deployCommands as $command) {
-            $this->addDeployCommand($command);
-        }
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function addDeployCommand(DeployCommand $command): self
-    {
-        $this->deployCommands[] = $command;
-        return $this;
-    }
-
-    /**
      * @return TaskConfigurationInterface[]
      */
     public function getAfterDeployTasks(): array
@@ -374,7 +375,6 @@ class Configuration
 
     /**
      * @param TaskConfigurationInterface[] $afterDeployTasks
-     * @return $this
      */
     public function setAfterDeployTasks($afterDeployTasks): self
     {
@@ -385,9 +385,6 @@ class Configuration
         return $this;
     }
 
-    /**
-     * @return $this
-     */
     public function addAfterDeployTask(TaskConfigurationInterface $taskConfig): self
     {
         $this->afterDeployTasks[] = $taskConfig;
@@ -396,28 +393,18 @@ class Configuration
 
     /**
      * @return TaskConfigurationInterface[]
-     * @deprecated Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
      */
     public function getPlatformConfigurations(): array
     {
-        $this->logger->warning(
-            "Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
-        );
-
         return $this->platformConfigurations;
     }
 
     /**
      * @param TaskConfigurationInterface[] $platformConfigurations
      * @return $this
-     * @deprecated Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
      */
     public function setPlatformConfigurations(array $platformConfigurations): self
     {
-        $this->logger->warning(
-            "Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
-        );
-
         $this->platformConfigurations = [];
         foreach ($platformConfigurations as $serverConfiguration) {
             $this->addPlatformConfiguration($serverConfiguration);
@@ -427,60 +414,10 @@ class Configuration
 
     /**
      * @return Configuration
-     * @deprecated Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
      */
     public function addPlatformConfiguration(TaskConfigurationInterface $platformConfiguration): self
     {
-        $this->logger->warning(
-            "Platform configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
-        );
-
         $this->platformConfigurations[] = $platformConfiguration;
-        return $this;
-    }
-
-    /**
-     * @return TaskConfigurationInterface[]
-     * @deprecated Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
-     */
-    public function getPlatformServices(): array
-    {
-        $this->logger->warning(
-            "Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
-        );
-
-        return $this->platformServices;
-    }
-
-    /**
-     * @param TaskConfigurationInterface[] $platformServices
-     * @return $this
-     * @deprecated Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
-     */
-    public function setPlatformServices(array $platformServices): self
-    {
-        $this->logger->warning(
-            "Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
-        );
-
-        $this->platformServices = [];
-        foreach ($platformServices as $platformService) {
-            $this->addPlatformService($platformService);
-        }
-        return $this;
-    }
-
-    /**
-     * @return Configuration
-     * @deprecated Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account
-     */
-    public function addPlatformService(TaskConfigurationInterface $platformService): self
-    {
-        $this->logger->warning(
-            "Platform service configuration is not supported on the Hypernode platform at the moment and configuration will not be taken into account"
-        );
-
-        $this->platformServices[] = $platformService;
         return $this;
     }
 
@@ -504,25 +441,16 @@ class Configuration
         $this->publicFolder = $publicFolder;
     }
 
-    /**
-     * @return array
-     */
     public function getPostInitializeCallbacks(): array
     {
         return $this->postInitializeCallbacks;
     }
 
-    /**
-     * @param array $callbacks
-     */
     public function setPostInitializeCallbacks(array $callbacks): void
     {
         $this->postInitializeCallbacks = $callbacks;
     }
 
-    /**
-     * @param callable $callback
-     */
     public function addPostInitializeCallback(callable $callback)
     {
         $this->postInitializeCallbacks[] = $callback;

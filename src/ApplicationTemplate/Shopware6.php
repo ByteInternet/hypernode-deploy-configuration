@@ -2,26 +2,13 @@
 
 namespace Hypernode\DeployConfiguration\ApplicationTemplate;
 
-use Hypernode\DeployConfiguration\ClusterSharedFolder;
-use Hypernode\DeployConfiguration\Command\Build\Composer;
-use Hypernode\DeployConfiguration\Command\Build\Shopware6\BuildAdministration;
-use Hypernode\DeployConfiguration\Command\Build\Shopware6\BuildStorefront;
-use Hypernode\DeployConfiguration\Command\Build\Shopware6\ShopwareRecovery;
-use Hypernode\DeployConfiguration\Command\Deploy\Shopware6\AssetInstall;
-use Hypernode\DeployConfiguration\Command\Deploy\Shopware6\CacheClear;
-use Hypernode\DeployConfiguration\Command\Deploy\Shopware6\ThemeCompile;
 use Hypernode\DeployConfiguration\Configuration;
-use Hypernode\DeployConfiguration\SharedFolder;
 
 class Shopware6 extends Configuration
 {
-    /**
-     * Shopware6 constructor.
-     * @param string $gitRepository
-     */
-    public function __construct(string $gitRepository)
+    public function __construct()
     {
-        parent::__construct($gitRepository);
+        parent::__construct();
 
         $this->initializeDefaultConfiguration();
     }
@@ -32,35 +19,37 @@ class Shopware6 extends Configuration
      */
     private function initializeDefaultConfiguration(): void
     {
-        $this->setPhpVersion('php72');
+        $this->setRecipe('shopware6');
 
-
-        $this->addBuildCommand(new Composer([
+        $this->setComposerOptions([
             '--verbose',
             '--no-progress',
             '--no-interaction',
             '--optimize-autoloader',
-            '--ignore-platform-reqs',
-        ]));
+        ]);
 
-        $this->addBuildCommand(new ShopwareRecovery());
-        $this->addBuildCommand(new BuildAdministration());
-        $this->addBuildCommand(new BuildStorefront());
+        $this->addBuildTask('deploy:vendors');
+        $this->addBuildTask('sw:deploy:vendors_recovery');
+        $this->addBuildTask('sw:touch_install_lock');
 
-        $this->addDeployCommand(new AssetInstall());
-        $this->addDeployCommand(new ThemeCompile());
-        $this->addDeployCommand(new CacheClear());
+        $this->addDeployTask('sw:build');
+        $this->addDeployTask('sw:database:migrate');
+        $this->addDeployTask('sw:cache:clear');
+        $this->addDeployTask('sw:cache:warmup');
 
         $this->setSharedFiles([
             '.env',
+            'install.lock',
+            'public/.user.ini',
         ]);
 
         $this->setSharedFolders([
-            new SharedFolder('var/log'),
-            new ClusterSharedFolder('config/jwt'),
-            new ClusterSharedFolder('public/sitemap'),
-            new ClusterSharedFolder('public/media'),
-            new ClusterSharedFolder('public/thumbnail'),
+            'config/jwt',
+            'files',
+            'var/log',
+            'public/sitemap',
+            'public/media',
+            'public/thumbnail',
         ]);
     }
 }

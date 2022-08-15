@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Hypernode\DeployConfiguration;
 
+/**
+ * @deprecated This class has been deprecated, instead of new SharedFile('/path/to/file'), just use '/path/to/file'.
+ */
 class SharedFile
 {
     /**
