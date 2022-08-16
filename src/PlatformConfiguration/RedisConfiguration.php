@@ -71,7 +71,7 @@ class RedisConfiguration implements
         $persistence = false,
         $useSupervisor = false
     ) {
-        $this->port = (self::DEFAULT_PORT && $persistence) ? self::DEFAULT_PERSISTENCE_PORT : $port;
+        $this->port = ($port == self::DEFAULT_PORT && $persistence) ? self::DEFAULT_PERSISTENCE_PORT : $port;
         $this->backendDb = $backendDb;
         $this->version = $version;
         $this->memory = $memory;
