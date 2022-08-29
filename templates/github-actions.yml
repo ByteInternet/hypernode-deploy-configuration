@@ -15,11 +15,11 @@ env:
 defaults:
   run:
     shell: bash
+    container: quay.io/hypernode/deploy:2.0-php8.1-node18
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: docker.hypernode.com/hypernode/docker:alpha
     steps:
       - uses: actions/checkout@v2
       - uses: actions/cache@v2
@@ -29,17 +29,18 @@ jobs:
       - uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - run: hipex-deploy build -vvv
+      - run: hypernode-deploy build -vvv
+        env:
+          DEPLOY_COMPOSER_AUTH: ${{ secrets.DEPLOY_COMPOSER_AUTH }}
       - name: archive production artifacts
         uses: actions/upload-artifact@v3
         with:
           name: deployment-build
           path: build/build.tgz
 
-  deploy_staging:
+  deploy:
     needs: build
     runs-on: ubuntu-latest
-    container: docker.hypernode.com/hypernode/docker:alpha
     steps:
       - uses: actions/checkout@v2
       - name: download build artifact
@@ -53,8 +54,7 @@ jobs:
       - run: mkdir -p $HOME/.ssh
       - name: deploy to staging
         if: github.ref == 'refs/heads/staging'
-        run: hipex-deploy deploy staging -vvv
+        run: hypernode-deploy deploy staging -vvv
       - name: deploy to production
         if: github.ref == 'refs/heads/master'
-        run: hipex-deploy deploy production -vvv
-
+        run: hypernode-deploy deploy production -vvv

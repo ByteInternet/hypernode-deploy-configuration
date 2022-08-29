@@ -1,6 +1,5 @@
-# see https://hub.docker.com/r/hypernode/deploy/tags for all possible tags
-# pin the image to a specific version to stay in control with updates 
-image: hypernode/deploy:alpha
+# See https://quay.io/repository/hypernode/deploy?tab=tags for all possible tags.
+image: quay.io/hypernode/deploy:2.0-php8.1-node18
 
 pipelines:
   branches:
