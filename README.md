@@ -22,7 +22,7 @@ Change configuration matching you use case, and refer to the documentation for o
 3. Setup your CI server
     1. GitLab CI [templates/.gitlab-ci.yml](./templates/.gitlab-ci.yml).
     2. Bitbucket [templates/bitbucket-pipelines.yml](./templates/bitbucket-pipelines.yml).
-    3. **Github Actions workflow coming soon!**
+    3. Github Actions [templates/github-actions.yml](./templates/github-actions.yml).
 4. For Magento 2 your first build will fail due to missing configuration. Login to the server and depending on your project file edit
 the `app/etc/env.php` or `app/etc/local.xml`. You will find these files in `~/apps/<domain>/shared/`.
 
@@ -122,7 +122,7 @@ Available templates:
 Example usage:
 `$configuration = new Magento2('git@git.foo.bar:magento-2/project.git', ['nl_NL'], ['nl_NL'])`
 
-## Required environment variables
+## Environment variables
 Some specific environment variables are required to allow the deploy image access to the git repository
 or to be able to send out notifications.
 
@@ -132,6 +132,16 @@ and the SSH user. Must be base64 encoded like this:
 
 ``` bash
 cat ~/.ssh/deploy_key | base64
+```
+
+### Optional
+- `DEPLOY_COMPOSER_AUTH` Composer auth.json contents. This file is required if you require access to specific Composer
+repositories like Magento's, 3rd party vendors, or even your own private Composer package repository. If this environment
+variable does not exist, no `auth.json` will be written, so it is optional.
+The auth.json must be base64 encoded like this:
+
+``` bash
+cat auth.json | base64
 ```
 
 ## Testing
