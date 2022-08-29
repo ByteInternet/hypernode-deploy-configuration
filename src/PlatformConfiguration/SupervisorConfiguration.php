@@ -8,11 +8,6 @@ use Hypernode\DeployConfiguration\StageConfigurableInterface;
 use Hypernode\DeployConfiguration\StageConfigurableTrait;
 use Hypernode\DeployConfiguration\TaskConfigurationInterface;
 
-/**
- * @deprecated SupervisorConfigurations are not supported on the Hypernode platform at the moment and configuration will not be taken into account
- *
- * Deploys supervisor configurations from your repository to the server
- */
 class SupervisorConfiguration implements
     TaskConfigurationInterface,
     ServerRoleConfigurableInterface,
