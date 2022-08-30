@@ -15,7 +15,7 @@ The repository contains:
 1. Composer `require hypernode/deploy-configuration --dev` package. Only needed when you want to have autocomplete in your `deploy.php`
 file.
 2. Copy the deploy templates inside the root of your project as `deploy.php`. You can find the template in
-[templates/deploy.php](./templates/deploy.php).
+[templates/deploy.php](./templates/deploy.magento2.php).
 As you can see a `$configuration` variable is assigned a instance of a `Configuration` class.
 This configuration object contains the whole deploy configuration and can be altered to your needs using getters/setters.
 Change configuration matching you use case, and refer to the documentation for other build in configurations and tasks.
