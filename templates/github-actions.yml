@@ -12,14 +12,10 @@ on:
 env:
   COMPOSER_CACHE_DIR: /tmp/composer-cache
 
-defaults:
-  run:
-    shell: bash
-    container: quay.io/hypernode/deploy:2.0-php8.1-node18
-
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: quay.io/hypernode/deploy:2.0-php8.1-node18
     steps:
       - uses: actions/checkout@v2
       - uses: actions/cache@v2
@@ -41,6 +37,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    container: quay.io/hypernode/deploy:2.0-php8.1-node18
     steps:
       - uses: actions/checkout@v2
       - name: download build artifact
