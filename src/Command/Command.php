@@ -2,8 +2,8 @@
 
 namespace Hypernode\DeployConfiguration\Command;
 
-use Hypernode\DeployConfiguration\StageConfigurableInterface;
-use Hypernode\DeployConfiguration\StageConfigurableTrait;
+use Hypernode\DeployConfiguration\Configurable\StageConfigurableInterface;
+use Hypernode\DeployConfiguration\Configurable\StageConfigurableTrait;
 use Hypernode\DeployConfiguration\TaskConfigurationInterface;
 
 class Command implements TaskConfigurationInterface, StageConfigurableInterface

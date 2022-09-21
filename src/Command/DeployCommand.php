@@ -2,8 +2,8 @@
 
 namespace Hypernode\DeployConfiguration\Command;
 
-use Hypernode\DeployConfiguration\ServerRoleConfigurableInterface;
-use Hypernode\DeployConfiguration\ServerRoleConfigurableTrait;
+use Hypernode\DeployConfiguration\Configurable\ServerRoleConfigurableInterface;
+use Hypernode\DeployConfiguration\Configurable\ServerRoleConfigurableTrait;
 
 class DeployCommand extends Command implements ServerRoleConfigurableInterface
 {

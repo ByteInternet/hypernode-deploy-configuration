@@ -13,4 +13,7 @@ $configuration = new ApplicationTemplate\Magento2(['en_GB', 'nl_NL']);
 $productionStage = $configuration->addStage('production', 'example.com');
 $productionStage->addServer('appname.hypernode.io');
 
+$testStage = $configuration->addStage('test', 'example.com');
+$testStage->addEphemeralServer('appname');
+
 return $configuration;

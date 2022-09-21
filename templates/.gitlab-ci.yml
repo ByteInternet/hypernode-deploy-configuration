@@ -24,6 +24,8 @@ deploy_test:
         - test
     script:
         - hypernode-deploy deploy test -vvv
+    after_script:
+        - hypernode-deploy cleanup
 
 # Deploy to production
 deploy_production:

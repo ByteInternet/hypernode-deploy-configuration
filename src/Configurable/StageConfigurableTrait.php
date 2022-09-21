@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Hypernode\DeployConfiguration;
+namespace Hypernode\DeployConfiguration\Configurable;
 
+
+use Hypernode\DeployConfiguration\Stage;
 
 trait StageConfigurableTrait
 {

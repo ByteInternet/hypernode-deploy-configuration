@@ -3,6 +3,8 @@ These documentation is the guide to painlessly setup an automated deploy on the 
 The repository contains:
 
 - Configuration objects
+- Deploy configuration templates
+- CI configuration templates
 - Documentation
 
 ## Whats inside?
@@ -14,9 +16,9 @@ The repository contains:
 ## Configuration
 1. Composer `require hypernode/deploy-configuration --dev` package. Only needed when you want to have autocomplete in your `deploy.php`
 file.
-2. Copy the deploy templates inside the root of your project as `deploy.php`. You can find the template in
+2. Copy a `deploy.php` template inside the root of your project as `deploy.php`. You can find the template in
 [templates/deploy.php](./templates/deploy.magento2.php).
-As you can see a `$configuration` variable is assigned a instance of a `Configuration` class.
+As you can see a `$configuration` variable is assigned an instance of a `Configuration` class.
 This configuration object contains the whole deploy configuration and can be altered to your needs using getters/setters.
 Change configuration matching you use case, and refer to the documentation for other build in configurations and tasks.
 3. Setup your CI server
@@ -35,7 +37,7 @@ Builds the application to prepare to run in a production environment.
 You can define commands which needs to be executed during the build stage as follows:
 
 ``` php
-$configuration->addBuildCommand(new \Hypernode\DeployConfiguration\Command\Build\Composer());
+$configuration->addBuildTask('deploy:vendors');
 ```
 
 This command will execute a `composer install` in your project folder install all project dependencies.
@@ -61,18 +63,21 @@ To set extra SSH options (https://www.ssh.com/academy/ssh/config) for your serve
 For example:
 
 ``` php
-$stage->addServer(
-    'appname.hypernode.io',
-    [],
-    [],
-    ['LogLevel' => 'verbose']
-);
+$stage->addServer('appname.hypernode.io', [], [], ['LogLevel' => 'verbose']);
 ```
 
-You can define commands which needs to be executed during the deploy stage as follows:
+You can define tasks which needs to be executed during the `deploy` stage as follows:
 
 ``` php
-$configuration->addDeployCommand(new \Hypernode\DeployConfiguration\Command\Deploy\Magento2\CacheFlush());
+use function Deployer\{run, task};
+
+...
+
+task('magento:cache:flush', static function () {
+    run('{{bin/php}} {{release_or_current_path}}/bin/magento cache:flush');
+});
+
+$configuration->addDeployTask('magento:cache:flush');
 ```
 
 All possible commands can be found in the `Hypernode\DeployConfiguration\Command\Deploy` namespace.
@@ -85,9 +90,8 @@ Optionally you can have some services and application configurations setup autom
 For example you could maintain your cron configuration in your GIT repository and have it automatically deployed to particular servers.
 
 ``` php
-$configuration ->addPlatformConfiguration(
-    (new \Hypernode\DeployConfiguration\PlatformConfiguration\CronConfiguration())
-        ->setStage('production')
+$configuration->addPlatformConfiguration(
+    (new PlatformConfiguration\CronConfiguration())->setStage('production')
 );
 ```
 
@@ -99,7 +103,7 @@ $configuration->addPlatformService(new \Hypernode\DeployConfiguration\PlatformSe
 
 For all possible tasks and configuration please refer to the API docs.
 
-### 3. AfterDeploy tasks
+### 4. AfterDeploy tasks
 
 After deploy tasks are triggered after a succesfull deployment.
 For example notifications are available.
@@ -108,6 +112,13 @@ Usage:
 ``` php
 $configuration->addAfterDeployTask(new \Hypernode\DeployConfiguration\AfterDeployTask\SlackWebhook());
 ```
+### 5. Ephemeral servers for acceptance/integration testing
+
+Usage:
+``` php
+$stage = $configuration->addStage('test', 'test.domain.com');
+$stage->addEphemeralServer('appname');
+```
 
 ## Application template
 
@@ -115,53 +126,56 @@ We provide a few application template which define the common set of tasks to be
 You could use those so you don't have to specify each task manually.
 
 Available templates:
-- Magento 1
-- Magento 2
-- Shopware 6
+- [Magento 1](src/ApplicationTemplate/Magento1.php)
+- [Magento 2](src/ApplicationTemplate/Magento2.php)
+- [Shopware 6](src/ApplicationTemplate/Shopware6.php)
 
 Example usage:
-`$configuration = new Magento2('git@git.foo.bar:magento-2/project.git', ['nl_NL'], ['nl_NL'])`
+`$configuration = new ApplicationTemplate\Magento2(['nl_NL']);`
 
 ## Environment variables
 Some specific environment variables are required to allow the deploy image access to the git repository
 or to be able to send out notifications.
 
 ### Required
-- `SSH_PRIVATE_KEY` Unencrypted SSH key. The key needs to have access to: main git repository, private packages
-and the SSH user. Must be base64 encoded like this:
-
-``` bash
-cat ~/.ssh/deploy_key | base64
-```
+- `SSH_PRIVATE_KEY` Unencrypted SSH key. The key needs to have access to the remote server(s). 
+  May be base64 encoded like this:
+  ``` console
+  cat ~/.ssh/deploy_key | base64
+  ```
 
 ### Optional
 - `DEPLOY_COMPOSER_AUTH` Composer auth.json contents. This file is required if you require access to specific Composer
 repositories like Magento's, 3rd party vendors, or even your own private Composer package repository. If this environment
 variable does not exist, no `auth.json` will be written, so it is optional.
 The auth.json must be base64 encoded like this:
-
-``` bash
-cat auth.json | base64
-```
+  ``` console
+  cat auth.json | base64
+  ```
+- `HYPERNODE_API_TOKEN` The Hypernode API token to be used for the project. Request one at support@hypernode.com. 
 
 ## Testing
-To test your build & deploy you can run your deploy locally.
+To test your build & deploy, you can run `hypernode-deploy` locally.
 
 First make sure you have all the required env variables setup using.
 
-``` bash
+``` console
 export SSH_PRIVATE_KEY=***
 export DEPLOY_COMPOSER_AUTH=***
+export HYPERNODE_API_TOKEN=***
 .... etc
 ```
 
 Then start your build / deployment run command from root of the project.
 
 *repeat -e <ENV> for all env vars that are present during build*
-``` bash
-docker run -it -e SSH_PRIVATE_KEY -e DEPLOY_COMPOSER_AUTH -v `pwd`:/build hypernode/deploy hypernode-deploy build -vvv
-```
-
-``` bash
-docker run -it -e SSH_PRIVATE_KEY -e DEPLOY_COMPOSER_AUTH -v `pwd`:/build hypernode/deploy hypernode-deploy deploy acceptance -vvv
+``` console
+docker run -it \
+    -e SSH_PRIVATE_KEY -e DEPLOY_COMPOSER_AUTH -e HYPERNODE_API_TOKEN \
+    -v `pwd`:/build hypernode/deploy \
+    hypernode-deploy build -vvv
+docker run -it \
+    -e SSH_PRIVATE_KEY -e DEPLOY_COMPOSER_AUTH -e HYPERNODE_API_TOKEN \
+    -v `pwd`:/build hypernode/deploy \
+    hypernode-deploy deploy acceptance -vvv
 ```

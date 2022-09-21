@@ -7,6 +7,9 @@ namespace Hypernode\DeployConfiguration;
  */
 class Server
 {
+    public const OPTION_HN_EPHEMERAL = 'hn_ephemeral';
+    public const OPTION_HN_PARENT_APP = 'hn_parent_app';
+
     /**
      * @var string
      */
@@ -44,6 +47,11 @@ class Server
     public function getHostname(): string
     {
         return $this->hostname;
+    }
+
+    public function setHostname(string $hostname): void
+    {
+        $this->hostname = $hostname;
     }
 
     /**

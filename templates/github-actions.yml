@@ -55,3 +55,6 @@ jobs:
       - name: deploy to production
         if: github.ref == 'refs/heads/master'
         run: hypernode-deploy deploy production -vvv
+      - name: cleanup acquired resources
+        if: ${{ always() }}
+        run: hypernode-deploy cleanup

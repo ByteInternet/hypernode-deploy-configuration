@@ -3,10 +3,10 @@
 namespace Hypernode\DeployConfiguration\PlatformConfiguration\Magento2;
 
 use Hypernode\DeployConfiguration\ServerRole;
-use Hypernode\DeployConfiguration\ServerRoleConfigurableInterface;
-use Hypernode\DeployConfiguration\ServerRoleConfigurableTrait;
-use Hypernode\DeployConfiguration\StageConfigurableInterface;
-use Hypernode\DeployConfiguration\StageConfigurableTrait;
+use Hypernode\DeployConfiguration\Configurable\ServerRoleConfigurableInterface;
+use Hypernode\DeployConfiguration\Configurable\ServerRoleConfigurableTrait;
+use Hypernode\DeployConfiguration\Configurable\StageConfigurableInterface;
+use Hypernode\DeployConfiguration\Configurable\StageConfigurableTrait;
 use Hypernode\DeployConfiguration\TaskConfigurationInterface;
 
 class JobQueueConsumer implements
