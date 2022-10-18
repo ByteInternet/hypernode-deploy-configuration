@@ -105,7 +105,7 @@ For all possible tasks and configuration please refer to the API docs.
 
 ### 4. AfterDeploy tasks
 
-After deploy tasks are triggered after a succesfull deployment.
+After deploy tasks are triggered after a successful deployment.
 For example notifications are available.
 
 Usage:
