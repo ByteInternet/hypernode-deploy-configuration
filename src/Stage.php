@@ -68,22 +68,22 @@ class Stage
     }
 
     /**
-     * Create a temporary (ephemeral) Hypernode instance based on given Hypernode.
+     * Create a temporary (brancher) Hypernode instance based on given Hypernode.
      * The hostname will be defined during the deployment.
      *
-     * @param string $appName Name of the Hypernode to base the ephemeral server on
+     * @param string $appName Name of the Hypernode to base the brancher server on
      * @param array|null $roles Roles for the server to be applied
      * @param array $options Extra host options for Deployer
      * @see ServerRole
      * @return Server
      */
-    public function addEphemeralServer(string $appName, array $roles = null, array $options = []): Server
+    public function addBrancherServer(string $appName, array $roles = null, array $options = []): Server
     {
-        $ephemeralOptions = [
-            Server::OPTION_HN_EPHEMERAL => true,
+        $brancherOptions = [
+            Server::OPTION_HN_BRANCHER => true,
             Server::OPTION_HN_PARENT_APP => $appName,
         ];
-        $options = array_merge($ephemeralOptions, $options);
+        $options = array_merge($brancherOptions, $options);
         $server = new Server('', $roles, $options);
         $this->servers[] = $server;
         return $server;

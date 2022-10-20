@@ -7,7 +7,7 @@ namespace Hypernode\DeployConfiguration;
  */
 class Server
 {
-    public const OPTION_HN_EPHEMERAL = 'hn_ephemeral';
+    public const OPTION_HN_BRANCHER = 'hn_brancher';
     public const OPTION_HN_PARENT_APP = 'hn_parent_app';
 
     /**

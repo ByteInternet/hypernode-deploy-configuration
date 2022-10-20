@@ -112,12 +112,12 @@ Usage:
 ``` php
 $configuration->addAfterDeployTask(new \Hypernode\DeployConfiguration\AfterDeployTask\SlackWebhook());
 ```
-### 5. Ephemeral servers for acceptance/integration testing
+### 5. Brancher servers for acceptance/integration testing
 
 Usage:
 ``` php
 $stage = $configuration->addStage('test', 'test.domain.com');
-$stage->addEphemeralServer('appname');
+$stage->addBrancherServer('appname');
 ```
 
 ## Application template
