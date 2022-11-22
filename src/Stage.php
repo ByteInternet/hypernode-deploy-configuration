@@ -75,16 +75,18 @@ class Stage
      * @param array|null $roles Roles for the server to be applied
      * @param array $options Extra host options for Deployer
      * @see ServerRole
-     * @return Server
+     * @return BrancherServer
      */
-    public function addBrancherServer(string $appName, array $roles = null, array $options = []): Server
+    public function addBrancherServer(string $appName, array $roles = null, array $options = []): BrancherServer
     {
         $brancherOptions = [
             Server::OPTION_HN_BRANCHER => true,
             Server::OPTION_HN_PARENT_APP => $appName,
+            Server::OPTION_HN_BRANCHER_LABELS => [],
+            Server::OPTION_HN_BRANCHER_SETTINGS => [],
         ];
         $options = array_merge($brancherOptions, $options);
-        $server = new Server('', $roles, $options);
+        $server = new BrancherServer('', $roles, $options);
         $this->servers[] = $server;
         return $server;
     }
