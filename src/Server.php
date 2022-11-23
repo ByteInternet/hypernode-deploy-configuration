@@ -8,6 +8,8 @@ namespace Hypernode\DeployConfiguration;
 class Server
 {
     public const OPTION_HN_BRANCHER = 'hn_brancher';
+    public const OPTION_HN_BRANCHER_LABELS = 'hn_brancher_labels';
+    public const OPTION_HN_BRANCHER_SETTINGS = 'hn_brancher_settings';
     public const OPTION_HN_PARENT_APP = 'hn_parent_app';
 
     /**
@@ -20,10 +22,7 @@ class Server
      */
     private $roles;
 
-    /**
-     * @var string[]
-     */
-    private $options = [];
+    private array $options;
 
     /**
      * @var string[]
@@ -32,7 +31,6 @@ class Server
 
     /**
      * @param string[] $roles
-     * @param string[] $options
      */
     public function __construct(string $hostname, array $roles = null, array $options = [])
     {
@@ -62,9 +60,6 @@ class Server
         return $this->roles;
     }
 
-    /**
-     * @return string[]
-     */
     public function getOptions(): array
     {
         return $this->options;
@@ -76,6 +71,16 @@ class Server
     public function getSshOptions(): array
     {
         return $this->sshOptions;
+    }
+
+    /**
+     * @param string $option
+     * @param mixed $value
+     * @return void
+     */
+    protected function setOption(string $option, $value)
+    {
+        $this->options[$option] = $value;
     }
 
     /**

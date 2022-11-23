@@ -14,6 +14,8 @@ $productionStage = $configuration->addStage('production', 'example.com');
 $productionStage->addServer('appname.hypernode.io');
 
 $testStage = $configuration->addStage('test', 'example.com');
-$testStage->addBrancherServer('appname');
+$testStage->addBrancherServer('appname')
+    ->setLabels(['stage=test', 'ci_ref=' . \getenv('GITHUB_RUN_ID') ?: 'none'])
+    ->setSettings(['cron_enabled' => false, 'supervisor_enabled' => false]);
 
 return $configuration;
