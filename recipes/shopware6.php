@@ -71,7 +71,7 @@ task('sw:writable:jwt', static function () {
 });
 
 task('sw:build', static function () {
-    run('./bin/build.sh');
+    run('cd {{release_path}} && ./bin/build.sh');
 });
 
 task('sw:touch_install_lock', static function () {
