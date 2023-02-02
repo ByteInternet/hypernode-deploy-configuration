@@ -51,5 +51,19 @@ class Shopware6 extends Configuration
             'public/media',
             'public/thumbnail',
         ]);
+
+        // Override the default deploy exclude, because we need the source files (scss/ts)
+        // on the deploy step to compile the assets.
+        $this->setDeployExclude([
+            './.git',
+            './.github',
+            './deploy.php',
+            './.gitlab-ci.yml',
+            './Jenkinsfile',
+            '.DS_Store',
+            '.idea',
+            '.gitignore',
+            '.editorconfig',
+        ]);
     }
 }
