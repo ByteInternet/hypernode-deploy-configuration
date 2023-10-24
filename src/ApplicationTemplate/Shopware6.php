@@ -20,6 +20,7 @@ class Shopware6 extends Configuration
     private function initializeDefaultConfiguration(): void
     {
         $this->setRecipe('shopware6');
+        $this->setPublicFolder('public');
 
         $this->setComposerOptions([
             '--verbose',
