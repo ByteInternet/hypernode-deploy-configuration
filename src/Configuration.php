@@ -2,7 +2,7 @@
 
 namespace Hypernode\DeployConfiguration;
 
-use Hypernode\DeployConfiguration\Logging\SimpleLogger;
+use Hypernode\DeployConfiguration\Logging\LoggingFactory;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
@@ -157,7 +157,7 @@ class Configuration
 
     public function __construct()
     {
-        $this->logger = new SimpleLogger(LogLevel::INFO);
+        $this->logger = LoggingFactory::create(LogLevel::INFO);
         $this->setDefaultComposerOptions();
     }
 
