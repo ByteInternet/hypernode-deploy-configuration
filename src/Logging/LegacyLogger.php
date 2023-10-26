@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Hypernode\DeployConfiguration\Logging;
 
 use Psr\Log\AbstractLogger;
@@ -9,8 +7,9 @@ use Psr\Log\LogLevel;
 
 /**
  * Simple logger implementation using printf
+ * This logger was written for psr/log < 3.0.0.
  */
-class SimpleLogger extends AbstractLogger
+class LegacyLogger extends AbstractLogger
 {
     private const LEVEL_MAPPING = [
         LogLevel::DEBUG => 0,
@@ -34,17 +33,14 @@ class SimpleLogger extends AbstractLogger
     }
 
     /**
-     * Logs with an arbitrary level.
-     *
-     * @param mixed   $level
-     * @param string|\Stringable $message
-     * @param mixed[] $context
-     *
-     * @return void
+     * @param mixed $level 
+     * @param string|\Stringable $message 
+     * @param mixed[] $context 
+     * @return void 
      */
-    public function log($level, $message, array $context = []): void
+    public function log($level, $message, array $context = array())
     {
-        if ($this->mapLevelToNumber($level) >= $this->mappedLevel) {
+        if ($this->mapLevelToNumber($level) ?? 1 >= $this->mappedLevel) {
             printf("%s (%s)\n", $message, json_encode($context));
         }
     }
