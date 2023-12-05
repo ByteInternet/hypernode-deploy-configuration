@@ -46,7 +46,9 @@ set('writable_dirs', [
 ]);
 
 task('sw:deploy:vendors_recovery', static function () {
-    run('{{bin/composer}} {{composer_action}} -d vendor/shopware/recovery {{composer_options}} 2>&1');
+    if (test('[ -d vendor/shopware/recovery ]')) {
+        run('{{bin/composer}} {{composer_action}} -d vendor/shopware/recovery {{composer_options}} 2>&1');
+    }
 });
 
 // This task remotely executes the `cache:clear` console command on the target server.
