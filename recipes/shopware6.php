@@ -76,6 +76,10 @@ task('sw:build', static function () {
     run('cd {{release_path}} && ./bin/build.sh');
 });
 
+task('sw:build:js', static function () {
+    run('cd {{release_path}} && ./bin/build-js.sh');
+});
+
 task('sw:touch_install_lock', static function () {
     run('touch install.lock');
 });
