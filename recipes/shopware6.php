@@ -73,10 +73,10 @@ task('sw:writable:jwt', static function () {
 });
 
 task('sw:build', static function () {
-    if (test('[ -f {{release_path}}/bin/build-js.sh ]')) {
-        run('cd {{release_path}} && ./bin/build-js.sh');
-    } else {
+    if (test('[ -f {{release_path}}/bin/build.sh ]')) {
         run('cd {{release_path}} && ./bin/build.sh');
+    } else {
+        run('cd {{release_path}} && ./bin/build-js.sh');
     }
 });
 
