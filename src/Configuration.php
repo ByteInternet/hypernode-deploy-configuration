@@ -182,13 +182,15 @@ class Configuration
         return true;
     }
 
-    public function addBuildTask(string $task): void
+    public function addBuildTask(string $task): self
     {
         if ($this->validateTask($task)) {
             $this->buildTasks[] = $task;
         } else {
             throw new \RuntimeException(sprintf("Build task %s does not exist!", $task));
         }
+
+        return $this;
     }
 
     /**
@@ -199,13 +201,15 @@ class Configuration
         return $this->buildTasks;
     }
 
-    public function addDeployTask(string $task): void
+    public function addDeployTask(string $task): self
     {
         if ($this->validateTask($task)) {
             $this->deployTasks[] = $task;
         } else {
             throw new \RuntimeException(sprintf("Deploy task %s does not exist!", $task));
         }
+
+        return $this;
     }
 
     /**
@@ -244,14 +248,18 @@ class Configuration
      * @param string[] $options
      * @return void
      */
-    public function setComposerOptions(array $options): void
+    public function setComposerOptions(array $options): self
     {
         $this->setVariable('composer_options', implode(' ', $options));
+
+        return $this;
     }
 
-    public function setDefaultComposerOptions(): void
+    public function setDefaultComposerOptions(): self
     {
         $this->setComposerOptions(self::DEFAULT_COMPOSER_OPTIONS);
+
+        return $this;
     }
 
     /**
@@ -331,12 +339,14 @@ class Configuration
     /**
      * @param string[] $writableFolders
      */
-    public function setWritableFolders(array $writableFolders): void
+    public function setWritableFolders(array $writableFolders): self
     {
         $this->writableFolders = [];
         foreach ($writableFolders as $folder) {
             $this->addWritableFolder($folder);
         }
+
+        return $this;
     }
 
     /**
@@ -426,9 +436,11 @@ class Configuration
         return $this->phpVersion;
     }
 
-    public function setPhpVersion(string $phpVersion): void
+    public function setPhpVersion(string $phpVersion): self
     {
         $this->phpVersion = $phpVersion;
+
+        return $this;
     }
 
     public function getPublicFolder(): string
@@ -436,9 +448,11 @@ class Configuration
         return $this->publicFolder;
     }
 
-    public function setPublicFolder(string $publicFolder): void
+    public function setPublicFolder(string $publicFolder): self
     {
         $this->publicFolder = $publicFolder;
+
+        return $this;
     }
 
     public function getPostInitializeCallbacks(): array
@@ -446,14 +460,18 @@ class Configuration
         return $this->postInitializeCallbacks;
     }
 
-    public function setPostInitializeCallbacks(array $callbacks): void
+    public function setPostInitializeCallbacks(array $callbacks): self
     {
         $this->postInitializeCallbacks = $callbacks;
+
+        return $this;
     }
 
-    public function addPostInitializeCallback(callable $callback)
+    public function addPostInitializeCallback(callable $callback): self
     {
         $this->postInitializeCallbacks[] = $callback;
+
+        return $this;
     }
 
     public function getBuildArchiveFile(): string
@@ -461,9 +479,11 @@ class Configuration
         return $this->buildArchiveFile;
     }
 
-    public function setBuildArchiveFile(string $buildArchiveFile): void
+    public function setBuildArchiveFile(string $buildArchiveFile): self
     {
         $this->buildArchiveFile = $buildArchiveFile;
+
+        return $this;
     }
 
     public function getLogDir(): string
@@ -474,9 +494,11 @@ class Configuration
     /**
      * Directory containing log files
      */
-    public function setLogDir(string $logDir): void
+    public function setLogDir(string $logDir): self
     {
         $this->logDir = $logDir;
+
+        return $this;
     }
 
     public function getLogger(): LoggerInterface
@@ -484,8 +506,10 @@ class Configuration
         return $this->logger;
     }
 
-    public function setLogger(LoggerInterface $logger): void
+    public function setLogger(LoggerInterface $logger): self
     {
         $this->logger = $logger;
+
+        return $this;
     }
 }
