@@ -6,6 +6,7 @@ use Hypernode\DeployConfiguration\Configurable\ServerRoleConfigurableInterface;
 use Hypernode\DeployConfiguration\Configurable\ServerRoleConfigurableTrait;
 use Hypernode\DeployConfiguration\Configurable\StageConfigurableInterface;
 use Hypernode\DeployConfiguration\Configurable\StageConfigurableTrait;
+use Hypernode\DeployConfiguration\ServerRole;
 use Hypernode\DeployConfiguration\TaskConfigurationInterface;
 
 /**
@@ -43,6 +44,7 @@ class CronConfiguration implements
     public function __construct(string $sourceFile = 'etc/cron')
     {
         $this->sourceFile = $sourceFile;
+        $this->setServerRoles([ServerRole::APPLICATION_FIRST]);
     }
 
     public function getSourceFile(): string
