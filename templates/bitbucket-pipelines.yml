@@ -1,35 +1,32 @@
 # See https://quay.io/repository/hypernode/deploy?tab=tags for all possible tags.
 image: quay.io/hypernode/deploy:3-php8.2-node18
 
+definition:
+  steps:
+    - step: &hypernode-build
+        name: Build
+        script:
+          - hypernode-deploy build
+        artifacts:
+          - build/**
+
 pipelines:
   branches:
     # Deploy to test configuration
     # If you are only deploying to production remove this configuration
-    test:
+    acceptance: # acceptance/staging branch
+      - step: *hypernode-build
       - step:
-          name: build
-          script:
-            - hypernode-deploy build -vvv
-          artifacts:
-            - build/**
-      - step:
-          name: deploy
+          name: Deploy to staging
           deployment: test
           script:
-            - hypernode-deploy deploy test -vvv
-          after-script:
-            - hypernode-deploy cleanup
-
+            - hypernode-deploy deploy test
     # Deploy to production
     master:
+      - step: *hypernode-build
       - step:
-          name: build
-          script:
-            - hypernode-deploy build
-          artifacts:
-            - build/**
-      - step:
-          name: deploy
+          name: Deploy to production
           deployment: production
           script:
             - hypernode-deploy deploy production
+
