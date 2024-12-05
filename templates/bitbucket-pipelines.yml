@@ -6,7 +6,7 @@ definition:
     - step: &hypernode-build
         name: Build
         script:
-          - hypernode-deploy build
+          - hypernode-deploy build -vvv
         artifacts:
           - build/**
 
@@ -14,13 +14,13 @@ pipelines:
   branches:
     # Deploy to test configuration
     # If you are only deploying to production remove this configuration
-    acceptance: # acceptance/staging branch
+    test: # acceptance/staging branch
       - step: *hypernode-build
       - step:
           name: Deploy to staging
           deployment: test
           script:
-            - hypernode-deploy deploy test
+            - hypernode-deploy deploy test -vvv
           after-script:
             - hypernode-deploy cleanup
     # Deploy to production
@@ -30,5 +30,5 @@ pipelines:
           name: Deploy to production
           deployment: production
           script:
-            - hypernode-deploy deploy production
+            - hypernode-deploy deploy production -vvv
 
