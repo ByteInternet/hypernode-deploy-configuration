@@ -21,6 +21,8 @@ pipelines:
           deployment: test
           script:
             - hypernode-deploy deploy test
+          after-script:
+            - hypernode-deploy cleanup
     # Deploy to production
     master:
       - step: *hypernode-build
