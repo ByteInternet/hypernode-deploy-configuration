@@ -69,7 +69,7 @@ task('sw:cache:warmup', static function () {
     run('cd {{release_path}} && bin/console cache:warmup');
 
     // Shopware 6.6+ dropped support for the http:cache:warmup command, so only execute it if the version is less than 6.6
-    if (version_compare(get('shopware_version'), '6.6.0', '<')) {
+    if (version_compare(get('shopware_version'), '6.6.0', '<=')) {
         run('cd {{release_path}} && bin/console http:cache:warm:up');
     }
 });
