@@ -17,6 +17,7 @@
     },
     "require": {
         "deployer/deployer": "7.0 - 7.4",
-        "psr/log": "^1.0||^2.0||^3.0"
+        "psr/log": "^1.0||^2.0||^3.0",
+        "symfony/polyfill-php81": "^1.33"
     }
 }
