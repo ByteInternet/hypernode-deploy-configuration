@@ -35,4 +35,24 @@ class BrancherServer extends Server
         $this->setOption(self::OPTION_HN_BRANCHER_SETTINGS, $settings);
         return $this;
     }
+
+    /**
+     * @param int $count Number of consecutive successful reachability checks required
+     * @return $this
+     */
+    public function setBrancherReachabilityCheckCount(int $count): self
+    {
+        $this->setOption(self::OPTION_HN_BRANCHER_REACHABILITY_CHECK_COUNT, $count);
+        return $this;
+    }
+
+    /**
+     * @param int $seconds Seconds between reachability checks
+     * @return $this
+     */
+    public function setBrancherReachabilityCheckInterval(int $seconds): self
+    {
+        $this->setOption(self::OPTION_HN_BRANCHER_REACHABILITY_CHECK_INTERVAL, $seconds);
+        return $this;
+    }
 }

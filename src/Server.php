@@ -10,6 +10,8 @@ class Server
     public const OPTION_HN_BRANCHER = 'hn_brancher';
     public const OPTION_HN_BRANCHER_LABELS = 'hn_brancher_labels';
     public const OPTION_HN_BRANCHER_SETTINGS = 'hn_brancher_settings';
+    public const OPTION_HN_BRANCHER_REACHABILITY_CHECK_COUNT = 'hn_brancher_reachability_check_count';
+    public const OPTION_HN_BRANCHER_REACHABILITY_CHECK_INTERVAL = 'hn_brancher_reachability_check_interval';
     public const OPTION_HN_PARENT_APP = 'hn_parent_app';
 
     /**
