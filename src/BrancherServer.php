@@ -37,6 +37,16 @@ class BrancherServer extends Server
     }
 
     /**
+     * @param int $timeout Maximum time in seconds to wait for brancher availability
+     * @return $this
+     */
+    public function setBrancherTimeout(int $timeout): self
+    {
+        $this->setOption(self::OPTION_HN_BRANCHER_TIMEOUT, $timeout);
+        return $this;
+    }
+
+    /**
      * @param int $count Number of consecutive successful reachability checks required
      * @return $this
      */
