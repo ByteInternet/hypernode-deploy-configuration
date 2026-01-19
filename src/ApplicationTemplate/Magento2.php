@@ -57,8 +57,8 @@ class Magento2 extends Configuration
     /**
      * Set Magento themes and optionally allow split static deployment
      *
-     * @param string[]|array<string, string[]> $themes Array of themes as ['vendor/theme', 'vendor/theme'] 
-     *                                                  or as ['vendor/theme' => ['nl_NL', 'en_US'], 'vendor/theme' => ['nl_NL', 'en_US']]
+     * @param string[]|array<string, string> $themes Array of themes as ['vendor/theme', 'vendor/theme'] 
+     *                                                  or as ['vendor/theme' => 'nl_NL en_US', 'vendor/theme' => 'nl_NL en_US']
      * @param bool $allowSplitStaticDeployment
      */
     public function setMagentoThemes(array $themes, bool $allowSplitStaticDeployment = true): void
