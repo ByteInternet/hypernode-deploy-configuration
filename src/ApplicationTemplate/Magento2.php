@@ -68,4 +68,16 @@ class Magento2 extends Configuration
             $this->setVariable('split_static_deployment', true);
         }
     }
+
+    /**
+     * Set Magento backend themes
+     *
+     * @param string[]|array<string, string> $themes Array of themes as ['vendor/theme', 'vendor/theme']
+     *                                                  or as ['vendor/theme' => 'nl_NL en_US', 'vendor/theme' => 'nl_NL en_US']
+     */
+    public function setMagentoBackendThemes(array $themes): void
+    {
+        $this->setVariable('magento_themes_backend', $themes);
+        $this->setVariable('split_static_deployment', true);
+    }
 }
