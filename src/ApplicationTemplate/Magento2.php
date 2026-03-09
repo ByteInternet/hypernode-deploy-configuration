@@ -92,13 +92,11 @@ class Magento2 extends Configuration
      * - Themes must be set using setMagentoThemes() with locale mapping (e.g., ['Vendor/theme' => 'nl_NL en_US'])
      *
      * @param bool $enabled Whether to enable high-performance static deployment (default: true)
-     * @param string $version Version of magento2-static-deploy to use (default: 'latest')
      * @see https://github.com/elgentos/magento2-static-deploy
      */
-    public function enableHighPerformanceStaticDeploy(bool $enabled = true, string $version = 'latest'): self
+    public function enableHighPerformanceStaticDeploy(bool $enabled = true): self
     {
         $this->setVariable('high_performance_static_deploy', $enabled);
-        $this->setVariable('high_performance_static_deploy_version', $version);
 
         return $this;
     }
