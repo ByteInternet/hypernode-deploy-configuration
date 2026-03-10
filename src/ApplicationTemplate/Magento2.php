@@ -80,4 +80,24 @@ class Magento2 extends Configuration
         $this->setVariable('magento_themes_backend', $themes);
         $this->setVariable('split_static_deployment', true);
     }
+
+    /**
+     * Enable high-performance static content deployment using elgentos/magento2-static-deploy.
+     *
+     * This uses a Go-based static content deployer that is 230-380x faster than the native
+     * Magento setup:static-content:deploy command. It automatically handles both Hyvä themes
+     * (using fast Go deployment) and Luma themes (dispatching to bin/magento).
+     *
+     * Requirements:
+     * - Themes must be set using setMagentoThemes() with locale mapping (e.g., ['Vendor/theme' => 'nl_NL en_US'])
+     *
+     * @param bool $enabled Whether to enable high-performance static deployment (default: true)
+     * @see https://github.com/elgentos/magento2-static-deploy
+     */
+    public function enableHighPerformanceStaticDeploy(bool $enabled = true): self
+    {
+        $this->setVariable('high_performance_static_deploy', $enabled);
+
+        return $this;
+    }
 }
