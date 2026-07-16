@@ -36,7 +36,12 @@ class HypernodeAnnotation implements
     /**
      * @var string
      */
-    private $apiToken;
+    private $api_token;
+
+    /**
+     * @var bool
+     */
+    private $throw_on_error;
 
     /**
      * HypernodeAnnotation constructor.
@@ -48,12 +53,14 @@ class HypernodeAnnotation implements
         string $name = null, 
         string $description = null,
         string $app = null, 
-        string $apiToken = null
+        bool $api_token = null,
+        bool $throw_on_error = false
     ) {
         $this->name = $name;
         $this->description = $description;
         $this->app = $app;
-        $this->apiToken = $apiToken;
+        $this->api_token = $api_token;
+        $this->throw_on_error = $throw_on_error;
     }
 
     /**
@@ -85,6 +92,14 @@ class HypernodeAnnotation implements
      */
     public function getApiToken(): ?string
     {
-        return $this->apiToken;
+        return $this->api_token;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getThrowOnError(): ?bool
+    {
+        return $this->throw_on_error;
     }
 }
