@@ -53,7 +53,7 @@ class HypernodeAnnotation implements
         string $name = null, 
         string $description = null,
         string $app = null, 
-        bool $api_token = null,
+        string $api_token = null,
         bool $throw_on_error = false
     ) {
         $this->name = $name;
