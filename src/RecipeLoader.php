@@ -28,6 +28,7 @@ class RecipeLoader
             ...explode(':', $envRecipePaths),
             ...self::DEFAULT_RECIPE_PATHS,
             InstalledVersions::getInstallPath('deployer/deployer') . '/recipe',
+            InstalledVersions::getInstallPath('deployer/deployer') . '/contrib',
         ];
     }
 
