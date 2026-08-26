@@ -81,7 +81,7 @@ class Server
      * @param mixed $value
      * @return void
      */
-    protected function setOption(string $option, $value)
+    public function setOption(string $option, $value)
     {
         $this->options[$option] = $value;
     }
